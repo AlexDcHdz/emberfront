@@ -1,0 +1,82 @@
+<form>
+		<div class="row">
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Origen</label>
+                 {{#power-select options=beginningOptions onopen=(action "setInitialBeginningOpts") search=(action "searchBeginningDestinations") noMatchesMessage="No se encontraron resultados" loadingMessage="Cargando resultados" searchMessage="Buscar" selected=search.origin onchange=(action (mut search.origin)) as |destination|}}
+                   {{destination.value}}
+                 {{/power-select}}
+						</div>
+				</div>
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Destino</label>
+                 {{#power-select options=destinationOptions onopen=(action "setDestinationOpts") search=(action "searchEndingDestinations") noMatchesMessage="No se encontraron resultados" loadingMessage="Cargando resultados" searchMessage="Buscar" selected=search.destination onchange=(action (mut search.destination)) as |destination|}}
+                   {{destination.value}}
+                 {{/power-select}}
+						</div>
+				</div>
+        <div class="{{if showPeople 'col-md-4' 'col-md-2'}}">
+						<div class="form-group">
+								<label>Fecha de salida</label>
+								{{bootstrap-datepicker value=search.departureDate class="form-control" startDate=currentDate language="es"}}
+						</div>
+        </div>
+        {{#if showPeople}}
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Adultos (&gt; 12 años)</label>
+								{{input class="form-control" value=search.adultCount type="text" placeholder="Número de adultos"}}
+						</div>
+				</div>
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Niños (2 - 11 años)</label>
+								{{input class="form-control" value=search.childrenCount type="text" placeholder="Número de niños"}}
+						</div>
+				</div>
+        {{/if}}
+		</div>
+    <div class="row">
+        {{#if showPeople}}
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Infantes (&lt; 2 años)</label>
+								{{input class="form-control" value=search.infantCount type="text" placeholder="Número de infantes"}}
+						</div>
+        </div>
+        {{/if}}
+        {{#if showPeople}}
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Viaje redondo</label>
+								{{input type="checkbox" checked=search.roundTrip}}
+						</div>
+        </div>
+        {{/if}}
+				<div class="col-md-4">
+						{{#if search.roundTrip}}
+						<div class="form-group">
+								<label>Fecha de regreso</label>
+								<div>
+										{{bootstrap-datepicker value=search.returningDate class="form-control" startDate=search.departureDate language="es"}}
+								</div>
+						</div>
+						{{/if}}
+        </div>
+        {{#if showPeople}}
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Adultos (&gt; 60 años)</label>
+								{{input class="form-control" value=search.olderAdultCount type="text" placeholder="Número de adultos mayores"}}
+						</div>
+        </div>
+        {{/if}}
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>&nbsp;</label>
+								<button {{action 'searchTrip'}} href class="full-width ladda-button" data-style="zoom-out">BUSCAR</button>
+						</div>
+				</div>
+		</div>
+</form>

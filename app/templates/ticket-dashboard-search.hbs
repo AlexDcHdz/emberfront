@@ -1,0 +1,232 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Buscar tickets</h1>
+        <form>
+          <div class="form-group">
+            <label>Número</label>
+            {{input class="form-control" value=ticketNumber type="text" placeholder="Número"}}
+          </div>
+          <div class="form-group">
+            <a class="btn btn-info" {{action 'search' ticketNumber}}>Buscar</a>
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label>Nombre </label>
+            {{input class="form-control" value=ticketName type="text" placeholder="Nombre"}}
+          </div>
+          <div class="form-group">
+            <a class="btn btn-info" {{action 'searchByName' ticketName}}>Buscar</a>
+          </div>
+        </form>
+        {{#if couponData}}
+          Gracias por el pago, su número de vale es: {{couponData.id}}
+        {{/if}}
+        {{#if sales}}
+          {{#each sales as |finishedSale|}}
+            {{#if finishedSale.payed}}
+              <hr>
+
+              <dl>
+                <dt>Código de compra</dt>
+                <dd><strong>{{finishedSale.shortId}}</strong></dd>
+                <dt>Pago en</dt>
+                <dd>
+                  {{#if (eq finishedSale.paymentProvider "BOOTH")}}
+                    Caja
+                  {{else}}
+                    Internet
+                  {{/if}}
+                </dd>
+              </dl>
+
+              <p>
+                Se ha efectuado el pago, puedes descargar tus boletos
+              </p>
+
+              {{#if finishedSale.bill}}
+                <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadBill/{{finishedSale.shortId}}?timeZone={{tz}}">Descargar factura</a>
+                <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadXmlBill/{{finishedSale.shortId}}">Descargar xml</a>
+              {{/if}}
+
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Asiento</th>
+                    <th>Salida</th>
+                    <th>Destino</th>
+                    <th># de boleto</th>
+                    <th>Comentarios</th>
+                    <th>Descargar boleto</th>
+                    <th>Cancelar boleto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each finishedSale.tickets as |ticket|}}
+                    <tr>
+                      <td> {{ticket.name}} </td>
+                      <td> {{ticket.seat}} </td>
+                      <td> {{ticket.startingStop}} </td>
+                      <td> {{ticket.endingStop}} </td>
+                      <td> {{ticket.ticketId}} </td>
+                      <td>
+                        {{#if commentsUpdated}}
+                        <div class="alert alert-info" role="alert">
+                          Los comentarios se han actualizado
+                        </div>
+                        {{/if}}
+                        {{#if commentsError}}
+                        <div class="alert alert-danger" role="alert">
+                          No fue posible actualizar los comentarios
+                        </div>
+                        {{/if}}
+                        {{textarea value=ticket.comments cols="40" rows="6"}}
+                        <a {{action "saveComments" ticket}} href class="btn btn-info">Guardar</a>
+                      </td>
+                      <td> <a href="http://api.medrano.just-cloud.com/sale/downloadTicket/{{ticket.ticketId}}?timeZone={{tz}}">Descargar</a></td>
+                      <td>
+                        {{#if (eq ticket.status "USED")}}
+                          Ticket usado
+                        {{else}}
+                          <a {{action "showDelete" ticket}} class="btn btn-danger">Cancelar</a>
+                        {{/if}}
+                      </td>
+                    </tr>
+                    {{#if ticket.predelete}}
+                    <tr>
+                      <td colspan="7">
+                        <div class="form-group">
+                          {{input class="form-control" value=cardNumber type="text" placeholder="Número de monedero"}}
+                        </div>
+                        <a {{action "deleteTicket" cardNumber false}} class="btn btn-danger">Cancelar y generar vale</a>
+                        <a class="btn btn-danger" cardNumber true>Cancelar y regresar efectivo</a>
+                        <a class="btn btn-info" {{action "hideDelete" ticket}}>Regresar</a>
+                      </td>
+                    </tr>
+                    {{/if}}
+                  {{/each}}
+                </tbody>
+              </table>
+              {{else if finishedSale}}
+              <h1>Favor de revisar el pago</h1>
+              <p>El pago no ha sido procesado, favor de revisar</p>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+        {{#if finishedSale.payed}}
+          <h1>Muchas gracias por tu compra</h1>
+
+          <dl>
+            <dt>Código de compra</dt>
+            <dd><strong>{{finishedSale.shortId}}</strong></dd>
+            <dt>Pago en</dt>
+            <dd>
+              {{#if (eq finishedSale.paymentProvider "BOOTH")}}
+                Caja
+              {{else}}
+                Internet
+              {{/if}}
+            </dd>
+          </dl>
+
+          <p>
+            Se ha efectuado el pago, puedes descargar tus boletos
+          </p>
+
+          {{#if finishedSale.bill}}
+            <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadBill/{{finishedSale.shortId}}">Descargar factura</a>
+            <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadXmlBill/{{finishedSale.shortId}}">Descargar xml</a>
+          {{/if}}
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Asiento</th>
+                <th>Salida</th>
+                <th>Destino</th>
+                <th># de boleto</th>
+                <th>Comentarios</th>
+                <th>Descargar boleto</th>
+                <th>Cancelar boleto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each finishedSale.tickets as |ticket|}}
+                <tr>
+                  <td> {{ticket.name}} </td>
+                  <td> {{ticket.seat}} </td>
+                  <td> {{ticket.startingStop}} </td>
+                  <td> {{ticket.endingStop}} </td>
+                  <td> {{ticket.ticketId}} </td>
+                  <td>
+                    {{#if commentsUpdated}}
+                    <div class="alert alert-info" role="alert">
+                      Los comentarios se han actualizado
+                    </div>
+                    {{/if}}
+                    {{#if commentsError}}
+                    <div class="alert alert-danger" role="alert">
+                      No fue posible actualizar los comentarios
+                    </div>
+                    {{/if}}
+                    {{textarea value=ticket.comments cols="40" rows="6"}}
+                    <a {{action "saveComments" ticket}} href class="btn btn-info">Guardar</a>
+                  </td>
+                  <td> <a href="http://api.medrano.just-cloud.com/sale/downloadTicket/{{ticket.ticketId}}?timeZone={{tz}}">Descargar</a></td>
+                  <td>
+                    <a {{action "showDelete" ticket}} class="btn btn-danger">Cancelar</a>
+                  </td>
+                </tr>
+                {{#if ticket.predelete}}
+                <tr>
+                  <td colspan="7">
+                    <div class="form-group">
+                      {{input class="form-control" value=cardNumber type="text" placeholder="Número de monedero"}}
+                    </div>
+                    <div class="form-group">
+                      {{input-mask mask="9999999999" class="form-control" unmaskedValue=phoneNumber type="text" placeholder="Número telefónico (nuevo monedero)"}}
+                    </div>
+                    <a {{action "deleteTicket" ticket cardNumber phoneNumber false}} class="btn btn-danger">Cancelar y generar vale</a>
+                    <a {{action "deleteTicket" ticket cardNumber phoneNumber true}} class="btn btn-danger">Cancelar y regresar efectivo</a>
+                    <a class="btn btn-info" {{action "hideDelete" ticket}}>Regresar</a>
+                  </td>
+                </tr>
+                {{/if}}
+              {{/each}}
+            </tbody>
+          </table>
+          {{else if finishedSale}}
+          <h1>Favor de revisar el pago</h1>
+          <p>El pago no ha sido procesado, favor de revisar</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

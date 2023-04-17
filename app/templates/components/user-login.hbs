@@ -1,0 +1,108 @@
+{{#if session.isAuthenticated}}
+		<button class="btn-medium blue-bg soap-popupbox" {{action 'logout'}}>LOGOUT</button>
+{{else}}
+		<button class="btn-medium blue-bg soap-popupbox" data-target= "#medher-signup">SIGNUP</button>
+		<button class= "btn-medium soap-popupbox" data-target="#medher-login">LOGIN</button>
+{{/if}}
+<div class="medher-signup-box medher-box" id="medher-signup">
+		<div class="login-social">
+				<a class="button login-facebook" href {{action 'facebookLogin'}}><i class=
+																																						"soap-icon-facebook"></i>Ingresa con Facebook</a>
+				<div class="g-signin2" data-onsuccess="googleLogin" data-theme="dark" data-width="256"></div>
+		</div>
+		<div class="seperator">
+				<label>O</label>
+		</div>
+		<div class="simple-signup">
+				<div class="text-center signup-email-section">
+						<a class="goto-signup-form goto-signup soap-popupbox" href="#medher-signup-form"><i class="soap-icon-letter"></i> Registrate con tu correo</a>
+				</div>
+		</div>
+		<div class="seperator"></div>
+		<p>Ya estas registrado? <a class="goto-login soap-popupbox" href=
+															 "#medher-login">Login</a></p>
+</div>
+<div class="medher-signup-box medher-box" id="medher-signup-form">
+		<div class="simple-signup">
+				<div class="text-center signup-email-section">
+						<a class="signup-email" href="#"><i class="soap-icon-letter"></i>Ingresa con tu Email</a>
+				</div>
+				{{#if registerErrors}}
+						<p class="text-danger">Por favor revisa que todo los campos estén llenos</p>
+				{{/if}}
+				<p class="description">Al momento de registrarte aceptas los terminos
+						de servicio y la politica de privacidad de Turismo en Omnibus.</p>
+		</div>
+		<div class="email-signup">
+				<form>
+						<div class="form-group">
+								{{input value=register.name class="input-text full-width" placeholder="Nombre" type="text" required=true}}
+						</div>
+						<div class="form-group">
+								{{input value=register.lastName class="input-text full-width" placeholder="Apellido" type="text" required=true}}
+						</div>
+						{{#if emailRepeatedError}}
+								<p class="text-danger">El nombre de usuario elegido ya está en uso</p>
+						{{/if}}
+						<div class="form-group">
+								{{input value=register.email class="input-text full-width" placeholder="Email" type="text" required=true}}
+						</div>
+						{{#if usernameRepeatedError}}
+								<p class="text-danger">El nombre de usuario elegido ya está en uso</p>
+						{{/if}}
+						<div class="form-group">
+								{{input value=register.username class="input-text full-width" placeholder="Nombre de usuario" type="text" required=true}}
+						</div>
+						{{#if registerPasswordErrors}}
+								<p class="text-danger">Ambos passwords deben de ser iguales</p>
+						{{/if}}
+						<div class="form-group">
+								{{input value=register.password class="input-text full-width" placeholder="Password" type="password" required=true}}
+						</div>
+						<div class="form-group">
+								{{input value=register.confirmPassword class="input-text full-width" placeholder="Confirmar Password" type="password" required=true}}
+						</div>
+						<div class="form-group">
+								<p class="description">Al momento de registrarte aceptas los
+										terminos de servicio y la politica de privacidad de Turismo en
+										Omnibus.</p>
+						</div>
+						<button disabled={{repeatedError}} class="full-width btn-medium" {{action "registerUser"}} type="submit">SIGNUP</button>
+				</form>
+		</div>
+		<div class="seperator"></div>
+		<p>Ya estas registrado? <a class="goto-login soap-popupbox" href=
+															 "#medher-login">Login</a></p>
+</div>
+<div class="medher-login-box medher-box" id="medher-login">
+		<div class="login-social">
+				<a class="button login-facebook" {{action 'facebookLogin'}}>
+						<i class= "soap-icon-facebook"></i>Ingresa con Facebook
+				</a>
+				<div class="g-signin2" data-onsuccess="googleLogin" data-theme="dark" data-width="256"></div>
+				<!-- <a class= "button login-googleplus" href="#"> -->
+				<!-- <i class="soap-icon-googleplus"></i>Ingresa con Google+ -->
+				<!-- </a> -->
+		</div>
+		<div class="seperator">
+				<label>O</label>
+		</div>
+		<form {{action 'authenticate' on='submit'}}>
+				<div class="form-group">
+						{{input value=identification placeholder='Nombre de usuario' class='input-text full-width'}}
+				</div>
+				<div class="form-group">
+						{{input value=password placeholder='Password' class='input-text full-width' type='password'}}
+				</div>
+				<div class="form-group">
+						<a class="forgot-password pull-right" href="#">Olvidaste tu contraseña?</a>
+						<div class="checkbox checkbox-inline">
+								<label><input type="checkbox">Recordarme</label>
+						</div>
+				</div>
+				<button type="submit" class="btn">Login</button>
+		</form>
+		<div class="seperator"></div>
+		<p>Todavía no estas registrado? <a class="goto-signup soap-popupbox"
+																			 href="#medher-signup">Sign up</a></p>
+</div>

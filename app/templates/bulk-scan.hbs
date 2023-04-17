@@ -1,0 +1,50 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Escanear ticket</h1>
+        <form {{action "sendThing" on="submit"}}>
+          <div class="form-group">
+            <label>Número</label>
+            {{input class="form-control" value=ticketNumber type="text" placeholder="Número" id="principal" autofocus="autofocus"}}
+            <button type="submit">Buscar</button>
+          </div>
+          {{#if currentTicket}}
+            {{#if (eq currentTicket.status 'ALREADY_USED')}}
+            <div class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+              El ticket ya fue usado
+            </div>
+            {{else}}
+            <p>Ticket a nombre de: {{currentTicket.passengerName}}</p>
+            {{/if}}
+          {{/if}}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

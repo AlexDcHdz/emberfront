@@ -1,0 +1,86 @@
+<h2>Selección de asientos</h2>
+{{#if showName}}
+  {{#each passengers as |passenger|}}
+    {{#if passenger.selected}}
+      <div class="pull-right">
+        <h2>Elegir asiento de {{passenger.name}}</h2>
+      </div>
+    {{/if}}
+  {{/each}}
+{{/if}}
+<div class="row">
+	<div class="col-md-5">
+		<table class="table table-striped downthrown">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Tipo</th>
+					<th>Salida</th>
+					<th>Regreso</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each passengers as |passenger|}}
+        <tr class="{{if passenger.selected 'highlight'}}" {{action 'passengerClicked' passenger}}>
+					<td>
+						{{#if edition}}
+						  {{input value=passenger.name class="form-control"}}
+						{{else}}
+						  {{passenger.name}}
+						{{/if}}
+					</td>
+					<td>
+						{{#if (eq passenger.passengerType 'ADULT')}}
+							Adulto
+						{{else if (eq passenger.passengerType 'CHILD')}}
+							Niño
+						{{else if (eq passenger.passengerType 'OLDER_ADULT')}}
+							Adulto mayor
+						{{else if (eq passenger.passengerType 'STUDENT')}}
+              Estudiante
+						{{else if (eq passenger.passengerType 'INFANT')}}
+							Infante
+						{{/if}}
+					</td>
+					<td>
+						{{passenger.departureSeat}}
+					</td>
+					<td>
+						{{passenger.returnSeat}}
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-7">
+		<ul class="nav nav-tabs">
+		{{#each trip.positions as |position idx|}}
+			<li role="presentation" class={{if (eq idx currentFloor) 'active'}}><a href {{action 'changeFloor' idx}}>Piso {{plus-one idx}}</a></li>
+		{{/each}}
+		</ul>
+		{{#each trip.positions as |position idx|}}
+      {{#if (eq idx currentFloor)}}
+			<table class="bus-table">
+				{{#each position as |row rowIdx|}}
+					<tr>
+						{{#each row as |position columnIdx|}}
+							<td>
+								<a {{action "positionClicked" position}} class="bus-position {{position.icon}} {{position.showData}} {{position.widthClass}} {{position.heightClass}}" data-tooltip="#position-data-{{position.name}}" >
+                  {{#if position.showNumber}}
+                    <div class="seatNumber">
+                      {{position.name}}
+                    </div>
+                  {{/if}}
+								</a>
+                <div id="position-data-{{position.name}}" style="display: none">
+                </div>
+							</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+      {{/if}}
+		{{/each}}
+	</div>
+</div>

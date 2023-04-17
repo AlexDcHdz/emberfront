@@ -1,0 +1,63 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Estatus liquidaciones</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Terminal</th>
+              <th>Turno activo</th>
+              <th>Fecha de inicio de turno</th>
+              <th>Vendedor</th>
+              <th>Monto</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {{#each model.booths as |booth|}}
+            <tr>
+              <td>{{booth.terminalName}}</td>
+              {{#if booth.startDate}}
+              <td>Activo</td>
+              <td>{{moment-format booth.startDate}}</td>
+              <td>{{booth.salesPersonName}}</td>
+              <td>{{format-money booth.currentPayedAmount}}</td>
+              {{else}}
+              <td>Inactivo</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              {{/if}}
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

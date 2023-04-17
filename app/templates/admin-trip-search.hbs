@@ -1,0 +1,339 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Elegir salida</label>
+            {{view "select" content=model
+              class="form-control"
+              prompt="Seleccionar salida"
+              value=selectedBeginning.name
+              optionValuePath="content.name"
+              optionLabelPath="content.name"}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Nombre del conductor</label>
+            {{input class="form-control" value=search.driverName type="text" placeholder="Conductor"}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Fecha</label>
+						{{bootstrap-datepicker value=search.beginningDate class="form-control" language="es"}}
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <a {{action 'searchData' selectedBeginning.name search.driverName search.beginningDate}} class="btn btn-success">Buscar viaje</a>
+          </div>
+          {{#if trips}}
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    Salida
+                  </th>
+                  <th>
+                    Llegada
+                  </th>
+                  <th>
+                    Hora de salida
+                  </th>
+                  <th>
+                    Hora de llegada
+                  </th>
+                  <th>
+                    Mostrar detalle
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each trips as |trip|}}
+                <tr>
+                  <td>
+                    {{trip.startingStop}}
+                  </td>
+                  <td>
+                    {{trip.endingStop}}
+                  </td>
+                  <td>
+                    {{moment-format trip.departureDate}}
+                  </td>
+                  <td>
+                    {{moment-format trip.estimatedArrivalDate}}
+                  </td>
+                  <td>
+                    <a class="btn btn-info" {{action 'showTrip' trip}}>Mostrar detalle</a>
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+          {{#if trip}}
+            <h1>{{trip.tripDetail.routeName}}</h1>
+            <h4>{{moment-format trip.tripDetail.departureDate}} - {{moment-format trip.tripDetail.estimatedArrivalDate}}</h4>
+            <h4>Paradas</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Parada</th>
+                  <th>Horario</th>
+                  <th>Tiempo de viaje</th>
+                  <th>Tiempo de espera</th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each trip.tripData.stops as |stop|}}
+                <tr>
+                  <td>{{stop.name}}</td>
+                  <td>{{moment-format stop.departureDate}}</td>
+                  <td>{{stop.travelMinutes}} minutos</td>
+                  <td>{{stop.waitingMinutes}} minutos</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+            {{#each trip.tripData.stops as |stop|}}
+              <div>
+                <h3 class="page-header">{{stop.name}}</h3>
+                {{#if stop.beginnings}}
+                <div>
+                  <h4>Ascensos</h4>
+                  {{#each stop.beginnings as |op|}}
+                  <div class="col-md-3">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr>
+                          <th>Pasajero</th>
+                          <td>{{op.passengerName}}</td>
+                        </tr>
+                        <tr>
+                          <th>Asiento</th>
+                          <td>{{op.seatName}}</td>
+                        </tr>
+                        <tr>
+                          <th># Ticket</th>
+                          <td>{{op.ticketId}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  {{/each}}
+                </div>
+                {{/if}}
+                {{#if stop.endings}}
+                <div>
+                  <h4>Descensos</h4>
+                  {{#each stop.endings as |op|}}
+                  <div class="col-md-3">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr>
+                          <th>Pasajero</th>
+                          <td>{{op.passengerName}}</td>
+                        </tr>
+                        <tr>
+                          <th>Asiento</th>
+                          <td>{{op.seatName}}</td>
+                        </tr>
+                        <tr>
+                          <th># Ticket</th>
+                          <td>{{op.ticketId}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  {{/each}}
+                </div>
+                {{/if}}
+              </div>
+            {{/each}}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Descripción</th>
+                  <th>Monto</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each trip.advances as |advance|}}
+                <tr>
+                  <td>
+                    {{advance.comments}}
+                  </td>
+                  <td>
+                    {{format-money advance.amount}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            <h5>Gastos</h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Concepto</th>
+                  <th>Monto</th>
+                  <th>Tipo</th>
+                  <th>Comprobante</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each trip.expenses as |expense|}}
+                  <tr>
+                    <td>
+                      <div class="form-group">
+                        {{expense.comments}}
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        {{expense.amount}}
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        {{expense.type}}
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        Tiene comprobante
+                        {{expense.receipt}}
+                      </div>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            {{#if trip.driver1.loans}}
+              <h5>Préstamos de operador 1</h5>
+              <table class="table table-striped">
+                <thead>
+                  <th>Monto del prestamo</th>
+                  <th>Monto restante</th>
+                  <th>Tipo de pago</th>
+                  <th>Concepto</th>
+                  <th>Observaciones</th>
+                  <th>Número</th>
+                  <th>Fecha del prestamo</th>
+                </thead>
+                <tbody>
+                  {{#each trip.driver1.loans as |loan|}}
+                    <tr>
+                      <td>{{format-money loan.loanAmount}}</td>
+                      <td>{{format-money loan.missingAmount}}</td>
+                      <td>
+                        {{#if (eq loan.type 'PERCENTAGE')}}
+                          Porcentaje
+                        {{else}}
+                          Monto
+                        {{/if}}
+                      </td>
+                      <td>
+                        {{#if (eq loan.concept 'unit-damage')}}
+                          Daño general a la unidad
+                        {{else if (eq loan.concept 'personal')}}
+                          Personal
+                        {{else if (eq loan.concept 'forgotten-passenger')}}
+                          Pasajero olvidado
+                        {{else if (eq loan.concept 'lost-suitcase')}}
+                          Equipaje perdido
+                        {{else if (eq loan.concept 'advance')}}
+                          Anticipo de sueldo
+                        {{else if (eq loan.concept 'diesel-exceded')}}
+                          Excedente de diesel
+                        {{else}}
+                          Otro
+                        {{/if}}
+                      </td>
+                      <td>{{loan.observations}}</td>
+                      <td>{{loan.number}}</td>
+                      <td>{{moment-format loan.dateCreated}}</td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{/if}}
+            {{#if trip.driver2.loans}}
+              <h5>Préstamos de operador 2</h5>
+              <table class="table table-striped">
+                <thead>
+                  <th>Monto del prestamo</th>
+                  <th>Monto restante</th>
+                  <th>Tipo de pago</th>
+                  <th>Número</th>
+                  <th>Concepto</th>
+                  <th>Observaciones</th>
+                  <th>Fecha del prestamo</th>
+                </thead>
+                <tbody>
+                  {{#each trip.driver2.loans as |loan|}}
+                    <tr>
+                      <td>{{format-money loan.loanAmount}}</td>
+                      <td>{{format-money loan.missingAmount}}</td>
+                      <td>
+                        {{#if (eq loan.type 'PERCENTAGE')}}
+                          Porcentaje
+                        {{else}}
+                          Monto
+                        {{/if}}
+                      </td>
+                      <td>
+                        {{#if (eq loan.concept 'unit-damage')}}
+                          Daño general a la unidad
+                        {{else if (eq loan.concept 'personal')}}
+                          Personal
+                        {{else if (eq loan.concept 'forgotten-passenger')}}
+                          Pasajero olvidado
+                        {{else if (eq loan.concept 'lost-suitcase')}}
+                          Equipaje perdido
+                        {{else if (eq loan.concept 'advance')}}
+                          Anticipo de sueldo
+                        {{else if (eq loan.concept 'diesel-exceded')}}
+                          Excedente de diesel
+                        {{else}}
+                          Otro
+                        {{/if}}
+                      </td>
+                      <td>{{loan.observations}}</td>
+                      <td>{{loan.number}}</td>
+                      <td>{{moment-format loan.dateCreated}}</td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

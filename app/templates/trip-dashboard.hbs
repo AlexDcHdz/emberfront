@@ -1,0 +1,28 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Autobus</th>
+      <th>Hora de salida del origen</th>
+      <th>Origen</th>
+      <th>Destino</th>
+      <th>Retraso</th>
+    </tr>
+  </thead>
+  <tbody>
+		{{#each stops as |trip|}}
+    <tr>
+      <td>{{trip.routeName}}</td>
+      <td>{{trip.bus.busNumber}}</td>
+      <td>{{moment-format trip.departureDate}}</td>
+      <td>{{trip.originName}}</td>
+      <td>{{trip.destinationName}}</td>
+			{{#if trip.delayedTime}}
+      <td>{{trip.delayedTime}} minutos</td>
+			{{else}}
+			<td>A tiempo</td>
+			{{/if}}
+    </tr>
+		{{/each}}
+  </tbody>
+</table>

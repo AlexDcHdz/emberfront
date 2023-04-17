@@ -1,0 +1,207 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Buscar paquetería</h1>
+
+        <form>
+          <div class="form-group">
+            <label>Número</label>
+            {{input class="form-control" value=ticketNumber type="text" placeholder="Número"}}
+          </div>
+          <div class="form-group">
+            <a class="btn btn-info" {{action 'search' ticketNumber}}>Buscar</a>
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label>Nombre </label>
+            {{input class="form-control" value=ticketName type="text" placeholder="Nombre"}}
+          </div>
+          <div class="form-group">
+            <a class="btn btn-info" {{action 'searchByName' ticketName}}>Buscar</a>
+          </div>
+        </form>
+        {{#if couponData}}
+          Gracias por el pago, su número de vale es: {{couponData.id}}
+        {{/if}}
+        {{#if sales}}
+          {{#each sales as |finishedSale|}}
+            {{#if finishedSale.payed}}
+              <hr>
+
+              <dl>
+                <dt>Código de compra</dt>
+                <dd><strong>{{finishedSale.shortId}}</strong></dd>
+                <dt>Pago en</dt>
+                <dd>
+                  {{#if (eq finishedSale.paymentProvider "BOOTH")}}
+                    Caja
+                  {{else}}
+                    Internet
+                  {{/if}}
+                </dd>
+              </dl>
+
+              <p>
+                Se ha efectuado el pago, puedes descargar tus boletos
+              </p>
+
+              {{#if finishedSale.bill}}
+                <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadBill/{{finishedSale.shortId}}?timeZone={{tz}}">Descargar factura</a>
+                <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadXmlBill/{{finishedSale.shortId}}">Descargar xml</a>
+              {{/if}}
+
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Envía</th>
+                    <th>Recibe</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Observaciones</th>
+                    <th>Contacto</th>
+                    <th>Descargar boleto</th>
+                    <th>Cancelar boleto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td> {{finishedSale.package.senderName}} </td>
+                    <td> {{finishedSale.package.receiverName}} </td>
+                    <td> {{finishedSale.package.startingStop}} </td>
+                    <td> {{finishedSale.package.endingStop}} </td>
+                    <td> {{finishedSale.package.concept}} </td>
+                    <td> {{finishedSale.package.contactData}} </td>
+                    <td> <a href="http://api.medrano.just-cloud.com/sale/downloadBaggageTicket/{{finishedSale.shortId}}?timeZone={{tz}}">Descargar</a></td>
+                    <td>
+                      {{#if (eq finishedSale.package.status "USED")}}
+                        Ticket usado
+                      {{else}}
+                        <a {{action "showDelete" finishedSale.package}} class="btn btn-danger">Cancelar</a>
+                      {{/if}}
+                    </td>
+                  </tr>
+                  {{#if finishedSale.package.predelete}}
+                  <tr>
+                    <td colspan="7">
+                      <div class="form-group">
+                        {{input class="form-control" value=cardNumber type="text" placeholder="Número de monedero"}}
+                      </div>
+                      <a {{action "deleteTicket" cardNumber false}} class="btn btn-danger">Cancelar y generar vale</a>
+                      <a class="btn btn-danger" cardNumber true>Cancelar y regresar efectivo</a>
+                      <a class="btn btn-info" {{action "hideDelete" finishedSale.package}}>Regresar</a>
+                    </td>
+                  </tr>
+                  {{/if}}
+                </tbody>
+              </table>
+              {{else if finishedSale}}
+              <h1>Favor de revisar el pago</h1>
+              <p>El pago no ha sido procesado, favor de revisar</p>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+        {{#if finishedSale.payed}}
+          <h1>Muchas gracias por tu compra</h1>
+
+          <dl>
+            <dt>Código de compra</dt>
+            <dd><strong>{{finishedSale.shortId}}</strong></dd>
+            <dt>Pago en</dt>
+            <dd>
+              {{#if (eq finishedSale.paymentProvider "BOOTH")}}
+                Caja
+              {{else}}
+                Internet
+              {{/if}}
+            </dd>
+          </dl>
+
+          <p>
+            Se ha efectuado el pago, puedes descargar tus boletos
+          </p>
+
+          {{#if finishedSale.bill}}
+            <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadBill/{{finishedSale.shortId}}">Descargar factura</a>
+            <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadXmlBill/{{finishedSale.shortId}}">Descargar xml</a>
+          {{/if}}
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Envía</th>
+                <th>Recibe</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Observaciones</th>
+                <th>Contacto</th>
+                <th>Descargar boleto</th>
+                <th>Cancelar boleto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> {{finishedSale.package.senderName}} </td>
+                <td> {{finishedSale.package.receiverName}} </td>
+                <td> {{finishedSale.package.startingStop}} </td>
+                <td> {{finishedSale.package.endingStop}} </td>
+                <td> {{finishedSale.package.concept}} </td>
+                <td> {{finishedSale.package.contactData}} </td>
+                <td> <a href="http://api.medrano.just-cloud.com/sale/downloadBaggageTicket/{{finishedSale.shortId}}?timeZone={{tz}}">Descargar</a></td>
+                <td>
+                  {{#if (eq finishedSale.package.status "USED")}}
+                    Ticket usado
+                  {{else}}
+                    <a {{action "showDelete" finishedSale.package}} class="btn btn-danger">Cancelar</a>
+                  {{/if}}
+                </td>
+              </tr>
+              {{#if finishedSale.package.predelete}}
+              <tr>
+                <td colspan="7">
+                  <div class="form-group">
+                    {{input class="form-control" value=cardNumber type="text" placeholder="Número de monedero"}}
+                  </div>
+                  <div class="form-group">
+                    {{input-mask mask="9999999999" class="form-control" unmaskedValue=phoneNumber type="text" placeholder="Número telefónico (nuevo monedero)"}}
+                  </div>
+                  <a {{action "deleteTicket" finishedSale.package cardNumber phoneNumber false}} class="btn btn-danger">Cancelar y generar vale</a>
+                  <a class="btn btn-danger" {{action "deleteTicket" finishedSale.package cardNumber true}}>Cancelar y regresar efectivo</a>
+                  <a class="btn btn-info" {{action "hideDelete" finishedSale.package}}>Regresar</a>
+                </td>
+              </tr>
+              {{/if}}
+            </tbody>
+          </table>
+          {{else if finishedSale}}
+          <h1>Favor de revisar el pago</h1>
+          <p>El pago no ha sido procesado, favor de revisar</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

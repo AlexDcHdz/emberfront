@@ -1,0 +1,550 @@
+<div id="page-wrapper">
+	<header class="navbar-static-top style6" id="header">
+		<div class="container">
+			<h1 class="logo navbar-brand"><a href="/" title=
+																			 "Turismo en Omnibus"><img alt="Turismo en Omnibus" src=
+																																 "images/medher.png"></a></h1>
+			<div class="pull-right hidden-mobile">
+				{{user-login}}
+			</div>
+		</div><a class="mobile-menu-toggle" data-toggle="collapse" href=
+						 "#mobile-menu-01">Mobile Menu Toggle</a>
+		<div class="main-navigation">
+			<div class="container">
+				<nav id="main-menu" role="navigation">
+					<ul class="menu">
+						<li>
+							<a href="/" title="Turismo Omnibus"><img alt=
+																																"Agencia de Viajes Medher" draggable="true" src=
+																																"images/tom_1.png"></a>
+						</li>
+						<li class="menu-item-has-children">
+							<a href="/">Inicio</a>
+						</li>
+            <li class="menu-item-has-children">
+              <a href="/viewTickets">Facturación / Tickets</a>
+            </li>
+            <li class="menu-item-has-children">
+              <a href="/salePoints">Puntos de Venta</a>
+            </li>
+            <li class="menu-item-has-children">
+              <a href="/about">Quienes somos</a>
+            </li>
+					</ul>
+				</nav>
+				<ul class="social-icons clearfix pull-right hidden-mobile">
+          <li class="twitter">
+            <a data-toggle="tooltip" href="http://www.twitter.com/viajes_medher" title="twitter"><i class=
+            "soap-icon-twitter"></i></a>
+          </li>
+          <li class="facebook">
+            <a data-toggle="tooltip" href=
+            "https://www.facebook.com/MedherOficial/" title=
+            "facebook"><i class="soap-icon-facebook"></i></a>
+          </li>
+				</ul>
+			</div>
+		</div>
+		<nav class="mobile-menu collapse" id="mobile-menu-01">
+			<ul class="menu" id="mobile-primary-menu">
+				<li class="main-navigation"><img alt="Agencia de Viajes Medher"
+																				 draggable="true" src="images/tom_1.png"></li>
+				<li class="menu-item-has-children">
+					<a href="/">Inicio</a>
+				</li>
+        <li class="menu-item-has-children">
+          <a href="/viewTickets">Facturación / Tickets</a>
+        </li>
+        <li class="menu-item-has-children">
+          <a href="/salePoints">Puntos de Venta</a>
+        </li>
+        <li class="menu-item-has-children">
+          <a href="/about">Quienes somos</a>
+        </li>
+			</ul>
+			<ul class="mobile-topnav container">
+				<li>
+					<a href="#">MI CUENTA</a>
+				</li>
+				<li>
+					<a class="soap-popupbox" href="#">LOGIN</a>
+				</li>
+				<li>
+					<a href="#%20class=">SIGNUP</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<div class="page-title-container">
+		<div class="container">
+			<div class="page-title pull-left">
+				<h2 class="entry-title">Opciones de Viaje</h2>
+			</div>
+			<ul class="breadcrumbs pull-right">
+				<li><a href="/">INICIO</a></li>
+				<li class="active">Resultado de Tu Búsqueda</li>
+			</ul>
+		</div>
+	</div>
+	<section id="content">
+		<div class="container">
+			<div id="main">
+				<div class="row">
+					<div class="col-sm-4 col-md-3">
+						<h4 class="search-results-title">
+							<i class="soap-icon-search"></i>
+							<b>Resultados</b>
+							<p>
+								<b>{{model.departureQuotes.length}}</b> salidas encontradas.
+							</p>
+							{{#if roundTrip}}
+								<p>
+									<b>{{model.returnQuotes.length}}</b> regresos encontrados.
+								</p>
+							{{/if}}
+						</h4>
+						{{#if sale.departureQuote}}
+							<div class="white-bg">
+								<h5>Detalles de salida</h5>
+                <h6>{{sale.departureQuote.origin.name}} - {{sale.departureQuote.destination.name}} ({{sale.departureQuote.route.name}}/{{sale.departureQuote.serviceLevel}})</h6>
+                <h6>{{moment-format sale.departureQuote.departingDate}}</h6>
+                <div class="amenities">
+                  {{#if sale.departureQuote.bus.wifi}}
+                    <i class="soap-icon-wifi circle"></i>
+                  {{/if}}
+                  {{#if sale.departureQuote.bus.headphones}}
+                    <i class="soap-icon-entertainment circle"></i>
+                  {{/if}}
+                  {{#if sale.departureQuote.bus.cafeteria}}
+                    <i class="soap-icon-fork circle"></i>
+                  {{/if}}
+                  {{#if sale.departureQuote.bus.bathroom}}
+                    <i class="soap-icon-family circle"></i>
+                  {{/if}}
+                </div>
+								<table class="table table-condensed">
+									<tbody>
+										{{#each model.passengers as |passenger|}}
+											{{#if (eq passenger.passengerType 'INFANT')}}
+												<tr>
+													<td>{{passenger.name}}</td>
+													<td>{{passenger.departureSeat}}</td>
+													<td>
+														Infante
+													</td>
+													<td>
+														$0
+													</td>
+												</tr>
+											{{/if}}
+											{{#if passenger.departureSeat}}
+												<tr>
+													<td>{{passenger.name}}</td>
+													<td>{{passenger.departureSeat}}</td>
+													<td>
+														{{#if (eq passenger.passengerType 'ADULT')}}
+															Adulto
+														{{else if (eq passenger.passengerType 'CHILD')}}
+															Niño
+														{{else if (eq passenger.passengerType 'STUDENT')}}
+															Estudiante
+														{{else if (eq passenger.passengerType 'OLDER_ADULT')}}
+															Adulto mayor
+														{{/if}}
+													</td>
+													{{#if (eq passenger.passengerType 'ADULT')}}
+														<td>{{format-money sale.departureQuote.adultPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'CHILD')}}
+														<td>{{format-money sale.departureQuote.childPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'STUDENT')}}
+														<td>{{format-money sale.departureQuote.studentPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'OLDER_ADULT')}}
+														<td>{{format-money sale.departureQuote.olderAdultPrice}}</td>
+													{{/if}}
+												</tr>
+											{{/if}}
+										{{/each}}
+									</tbody>
+								</table>
+							</div>
+						{{/if}}
+						{{#if sale.returnQuote}}
+							<div class="white-bg">
+								<h5>Detalles de regreso</h5>
+                <h6>{{sale.returnQuote.origin.name}} - {{sale.returnQuote.destination.name}} ({{sale.returnQuote.route.name}}/{{sale.returnQuote.serviceLevel}})</h6>
+                <h6>{{moment-format sale.returnQuote.departingDate}}</h6>
+                <div class="amenities">
+                  {{#if sale.returnQuote.bus.wifi}}
+                    <i class="soap-icon-wifi circle"></i>
+                  {{/if}}
+                  {{#if sale.returnQuote.bus.headphones}}
+                    <i class="soap-icon-entertainment circle"></i>
+                  {{/if}}
+                  {{#if sale.returnQuote.bus.cafeteria}}
+                    <i class="soap-icon-fork circle"></i>
+                  {{/if}}
+                  {{#if sale.returnQuote.bus.bathroom}}
+                    <i class="soap-icon-family circle"></i>
+                  {{/if}}
+                </div>
+								<table class="table table-condensed">
+									<tbody>
+										{{#each model.passengers as |passenger|}}
+											{{#if (eq passenger.passengerType 'INFANT')}}
+												<tr>
+													<td>{{passenger.name}}</td>
+													<td>{{passenger.departureSeat}}</td>
+													<td>
+														Infante
+													</td>
+													<td>
+														$0
+													</td>
+												</tr>
+											{{/if}}
+											{{#if passenger.returnSeat}}
+												<tr>
+													<td>{{passenger.name}}</td>
+													<td>{{passenger.returnSeat}}</td>
+													<td>
+														{{#if (eq passenger.passengerType 'ADULT')}}
+															Adulto
+														{{else if (eq passenger.passengerType 'CHILD')}}
+															Niño
+														{{else if (eq passenger.passengerType 'STUDENT')}}
+															Estudiante
+														{{else if (eq passenger.passengerType 'OLDER_ADULT')}}
+															Adulto mayor
+														{{/if}}
+													</td>
+													{{#if (eq passenger.passengerType 'ADULT')}}
+														<td>{{format-money sale.returnQuote.adultPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'STUDENT')}}
+														<td>{{format-money sale.returnQuote.studentPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'CHILD')}}
+														<td>{{format-money sale.returnQuote.childPrice}}</td>
+													{{/if}}
+													{{#if (eq passenger.passengerType 'OLDER_ADULT')}}
+														<td>{{format-money sale.returnQuote.olderAdultPrice}}</td>
+													{{/if}}
+												</tr>
+											{{/if}}
+										{{/each}}
+									</tbody>
+								</table>
+							</div>
+						{{/if}}
+						<div class="white-bg">
+							<h5>Precio total {{format-money totalPrice}}</h5>
+						</div>
+					</div>
+					<div class="col-sm-8 col-md-9">
+						<div class="tab-container style1">
+							<ul class="tabs full-width">
+								<li class="{{if isDepartSelection 'active'}}">
+									<a>Salida</a>
+								</li>
+								<li class="{{if isReturnSelection 'active'}}">
+									<a>Regreso</a>
+								</li>
+								<li class="{{if (eq currentStep 'confirmation') 'active'}}">
+									<a>Confirmar datos</a>
+								</li>
+								<li class="{{if (eq currentStep 'payment') 'active'}}">
+									<a>Datos de pago</a>
+								</li>
+							</ul>
+						</div>
+						{{#if currentQuotes}}
+							{{ticket-quotes quotes=currentQuotes selectQuoteAction="selectQuote"}}
+              <div class="clearfix">
+                <div class="pull-right">
+                  <a {{action "returnSearch"}} class="btn btn-info">Regresar</a>
+                </div>
+              </div>
+						{{/if}}
+						{{#if currentTrip}}
+							<div class="white-bg">
+								<h1>
+                  {{#if (eq tripType "departure")}}
+                    Viaje de <strong>salida</strong>:
+									{{else if (eq tripType "return")}}
+                    Viaje de <strong>regreso</strong>:
+                  {{/if}}
+                  {{currentQuote.origin.name}} - {{currentQuote.destination.name}}
+                </h1>
+								<h2>Ruta: {{currentQuote.route.name}}</h2>
+
+                {{#if (eq currentStep 'selectNames')}}
+                  <p>A continuación por favor escriba el nombre de los pasajeros:</p>
+
+                  {{#each model.passengers as |passenger|}}
+                    <div>
+                      <h3>
+                        {{passenger.originalName}}
+                        {{#if (eq passenger.passengerType 'ADULT')}}
+                          (Adulto)
+                        {{else if (eq passenger.passengerType 'CHILD')}}
+                          (Niño)
+                        {{else if (eq passenger.passengerType 'STUDENT')}}
+                          (Estudiante)
+                        {{else if (eq passenger.passengerType 'OLDER_ADULT')}}
+                          (Adulto mayor)
+                        {{/if}}
+                      </h3>
+                      {{input class="form-control" value=passenger.name type="text" placeholder="Nombre del pasajero"}}
+                    </div>
+                  {{/each}}
+                  <br />
+                  <div class="pull-right">
+                    <a {{action "returnQuotes"}} class="btn btn-info">Regresar</a>
+                    <a {{action "namesSelected"}} class="btn btn-success">Continuar</a>
+                  </div>
+                {{else if (eq currentStep 'departureSeatSelection')}}
+                  {{ticket-client-seats
+                    returnStep="returnFromDepartureSeats"
+                    continueStep="continueFromDepartureSeats"
+                    direction=direction
+                    mode="departure"
+                    trip=sale.departureTrip
+                    quote=sale.departureQuote
+                    passengers=model.passengers}}
+                {{else if (eq currentStep 'returnSeatSelection')}}
+                  {{ticket-client-seats
+                    returnStep="returnFromReturnSeats"
+                    continueStep="continueFromReturnSeats"
+                    mode="return"
+                    direction=direction
+                    trip=sale.returnTrip
+                    quote=sale.returnQuote
+                    passengers=model.passengers}}
+                {{/if}}
+
+                <div class="clearfix">
+                  <div>
+                    <p>
+                      <img style="height: 30px; width: 30px;" src="/images/bus/a_ver.png"> Disponible
+                    </p>
+                    <p>
+                      <img style="height: 30px; width: 30px;" src="/images/bus/a_rjb.png"> Ocupado
+                    </p>
+                    <p>
+                      <img style="height: 30px; width: 30px;" src="/images/bus/a_ama.png"> Seleccionado
+                    </p>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+							</div>
+						{{/if}}
+						{{#if (eq currentStep 'confirmation')}}
+							<div class="white-bg">
+								<h1>Confirmar datos de salida</h1>
+								<h2>{{sale.departureQuote.origin.name}} - {{sale.departureQuote.destination.name}}</h2>
+								<h3>Ruta: {{sale.departureQuote.route.name}}</h3>
+                <h3>{{moment-format sale.departureQuote.departingDate}}</h3>
+								{{ticket-seats
+									mode="departure"
+									edition=false
+									trip=sale.departureTrip
+									quote=sale.departureQuote
+									passengers=model.passengers}}
+								{{#if sale.returnTrip}}
+								<hr />
+								<h1>Confirmar datos de regreso</h1>
+								<h2>{{sale.returnQuote.origin.name}} - {{sale.returnQuote.destination.name}}</h2>
+								<h3>Ruta: {{sale.returnQuote.route.name}}</h3>
+								{{ticket-seats
+									mode="return"
+									edition=false
+									trip=sale.returnTrip
+									quote=sale.returnQuote
+									passengers=model.passengers}}
+								{{/if}}
+								<div class="pull-right">
+									<a {{action "confirmData"}} class="btn btn-success">Confirmar</a>
+								</div>
+								<div class="pull-right">
+									<a {{action "returnData"}} class="btn btn-info">Regresar</a>
+								</div>
+								<div class="clearer"></div>
+							</div>
+						{{/if}}
+						{{#if (eq currentStep 'payment')}}
+							{{ticket-client-payment passengers=model.passengers sale=sale pendingSale="pendingSale" finishedSale="finishedSale" returnPayment="returnPayment"}}
+						{{/if}}
+						{{#if (eq currentStep 'selectNumbers')}}
+							<div class="white-bg row">
+                <div class="col-md-offset-3 col-md-6">
+                  <h1>Número de personas que van a viajar</h1>
+                  <div class="text-center">
+                    <div class="form-group">
+                      <label for="adultCount">Adultos</label>
+                      {{view "select" content=adultCountOptions
+                        id="adultCount"
+                        class="form-control"
+                        prompt="Número de adultos"
+                        value=counts.adult
+                        optionValuePath="content"
+                        optionLabelPath="content"}}
+                    </div>
+                    {{#if countData.showChildren}}
+                    <div class="form-group">
+                      <label for="childCount">Niños</label>
+                      {{view "select" content=childrenCountOptions
+                        id="childCount"
+                        class="form-control"
+                        prompt="Número de niños"
+                        value=counts.child
+                        optionValuePath="content"
+                        optionLabelPath="content"}}
+                    </div>
+                    {{/if}}
+                    {{#if countData.showStudents}}
+                    <div class="form-group">
+                      <label for="studentCount">Estudiantes</label>
+                      {{view "select" content=studentCountOptions
+                        id="studentCount"
+                        class="form-control"
+                        prompt="Número de estudiantes"
+                        value=counts.student
+                        optionValuePath="content"
+                        optionLabelPath="content"}}
+                    </div>
+                    {{/if}}
+                    {{#if countData.showOlderAdults}}
+                    <div class="form-group">
+                      <label for="olderAdultCount">Adultos mayores</label>
+                      {{view "select" content=olderAdultCountOptions
+                        id="olderAdultCount"
+                        class="form-control"
+                        prompt="Número de adultos mayores"
+                        value=counts.olderAdult
+                        optionValuePath="content"
+                        optionLabelPath="content"}}
+                    </div>
+                    {{/if}}
+                    {{#if countData.showInfants}}
+                    <div class="form-group">
+                      <label for="infantCount">Infantes</label>
+                      {{view "select" content=infantCountOptions
+                        id="infantCount"
+                        class="form-control"
+                        prompt="Número de adultos mayores"
+                        value=counts.infants
+                        optionValuePath="content"
+                        optionLabelPath="content"}}
+                    </div>
+                    {{/if}}
+                  </div>
+                  <div class="pull-right">
+                    <a {{action "returnQuotes"}} class="btn btn-info">Regresar</a>
+                    <a {{action "countsSelected"}} class="btn btn-success">Continuar</a>
+                  </div>
+                </div>
+              </div>
+            {{/if}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer id="footer">
+		<div class="footer-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-md-4">
+						<div class="pull-left">
+							<a href="/" title="Turismo Omnibus"><img alt=
+																																"Agencia de Viajes Medher" draggable="true" src=
+																																"images/medher.png"></a>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<h2>Boletín</h2>
+<!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="//turismoenomnibus.us15.list-manage.com/subscribe/post?u=33e40c8ba3f4bb5eec014e1a3&amp;id=6f33e03215" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	<p>Suscribase a nuestro boletín para recibir las últimas promociones</p>
+<div class="indicates-required"><span class="asterisk">*</span> indica requerido</div>
+<div class="mc-field-group">
+	<label for="mce-EMAIL">Email <span class="asterisk">*</span>
+</label>
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_33e40c8ba3f4bb5eec014e1a3_6f33e03215" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Suscribirse" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+<!--End mc_embed_signup-->
+						<span><a href="politicas.html">Aviso de Privacidad</a><br>
+							<a href="politicas.html">Términos y Condiciones</a></span>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<br>
+						<address class="contact-details">
+							<span class="contact-phone"><i class="soap-icon-phone"></i>01 800 727 8633</span><br>
+							<span class="contact-phone">WhatsApp: 55 2899 0715</span><br>
+              <a class="contact-email" href="mailto:atencionaclientes@medher.mx"><i class="soap-icon-message"></i> atencionaclientes@medher.mx</a>
+						</address>
+						<ul class="social-icons clearfix">
+							<li class="facebook">
+								<a data-toggle="tooltip" href=
+									 "https://www.facebook.com/medhertampico" title=
+									 "facebook"><i class="soap-icon-facebook"></i></a>
+              </li>
+              <li class="twitter">
+                <a data-toggle="tooltip" href="http://www.twitter.com/viajes_medher" title="twitter"><i class=
+                "soap-icon-twitter"></i></a>
+              </li>
+              <li class="facebook">
+                <a data-toggle="tooltip" href=
+                "https://www.facebook.com/MedherOficial/" title=
+                "facebook"><i class="soap-icon-facebook"></i></a>
+							</li>
+						</ul>
+                        <address class="contact-details">
+                            <span>Solicita informes y cotización de renta de unidades al siguiente contacto:</span>
+                            <br>
+                            <a class="contact-email" href="mailto:viajesmedher@hotmail.com" style="padding-right: 0px">viajesmedher@hotmail.com</a>
+                        </address>
+												<address class="contact-details">
+                            <span>Solicita información de corridas a los siguientes números:</span>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Sucursal central: (833) 217-2228</a>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Sucursal norte: (833) 139-0149</a>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Horario de 24 hrs. Central: (833) 126-0010</a>
+                        </address>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bottom gray-area">
+			<div class="pull-right">
+				<a class="animated" data-animation-type="bounce" href="#" id=
+					 "back-to-top"><i class="soap-icon-longarrow-up circle"></i></a>
+			</div>
+			<div class="copyright pull-right">
+				<p>© 2017 Turismo en Omnibus</p>
+			</div>
+		</div>
+	</footer>
+</div>

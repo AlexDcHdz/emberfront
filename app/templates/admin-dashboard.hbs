@@ -1,0 +1,123 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Dashboard</h1>
+        <h4 class="text-info">Bienvenido {{profile.name}} {{profile.lastName}}</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-6">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  Configuración de terminal
+                </div>
+                <div class="panel-body">
+                  {{#if model.terminal}}
+                    <dl class="dl-horizontal">
+                      <dt>Terminal</dt>
+                      <dd>{{model.terminal.terminalName}}</dd>
+                      <dt>Parada</dt>
+                      <dd>{{model.terminal.stopOffName}}</dd>
+                      <dt>Oficina</dt>
+                      <dd>{{model.terminal.officeName}}</dd>
+                    </dl>
+                  {{else}}
+                    Este equipo no está configurado como terminal
+                  {{/if}}
+                  {{#if changeTerminalConfiguration}}
+                    <form>
+                      <h2>Asignar terminal existente</h2>
+                      <div class="form-group">
+                        <label for="officeLocation">Oficina</label>
+                        {{view "select" content=model.offices
+                          class="form-control"
+                          prompt="Selecciona una oficina"
+                          value=oldTerminal.officeLocation
+                          optionValuePath="content._links.self.href"
+                          optionLabelPath="content.name"}}
+                      </div>
+                      {{#if oldTerminal.officeLocation}}
+                      <div class="form-group">
+                        <label for="existingTerminal">Terminal</label>
+                        {{view "select" content=terminals
+                          class="form-control"
+                          prompt="Selecciona una terminal"
+                          value=selectedTerminal
+                          optionValuePath="content.terminalId"
+                          optionLabelPath="content.terminalName"}}
+                      </div>
+                      <div class="pull-right">
+                        <a {{action 'selectTerminal'}} class="btn btn-success">Reasignar terminal</a>
+                      </div>
+                      {{/if}}
+                    </form>
+                    <div class="clearer"></div>
+                    <form>
+                      <h2>Crear terminal</h2>
+                      <div class="form-group">
+                        <label for="terminalName">Nombre de la terminal (taquilla)</label>
+                        {{input class="form-control" value=newTerminal.terminalName type="text" placeholder="Terminal"}}
+                      </div>
+                      <div class="form-group">
+                        <label for="officeLocation">Oficinas</label>
+                        {{view "select" content=model.offices
+                          class="form-control"
+                          prompt="Selecciona una oficina"
+                          value=newTerminal.officeLocation
+                          optionValuePath="content._links.self.href"
+                          optionLabelPath="content.name"}}
+                      </div>
+                      <div class="form-group">
+                        <label for="stopName">Parada</label>
+                        {{type-ahead class="form-control" content=lookupBeginnings
+                          selection=newTerminal.stopOffName}}
+                      </div>
+                      <div class="form-group">
+                        <label for="stopName">Terminal para venta</label>
+                        {{input type="checkbox" checked=newTerminal.salesTerminal}}
+                      </div>
+                      <div class="form-group">
+                        <label for="stopName">Terminal para pagos</label>
+                        {{input type="checkbox" checked=newTerminal.paymentTerminal}}
+                      </div>
+                      <div class="pull-right">
+                        <a {{action 'createTerminal'}} class="btn btn-success">Crear terminal</a>
+                      </div>
+                    </form>
+                  {{else}}
+                    <div class="pull-right">
+                      <a {{action 'enableTerminalConfiguration'}} class="btn btn-danger">Cambiar configuración</a>
+                    </div>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

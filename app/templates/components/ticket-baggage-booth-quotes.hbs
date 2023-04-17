@@ -1,0 +1,32 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Origen</th>
+      <th>Destino</th>
+      <th>Fecha de salida</th>
+      <th>Fecha de llegada</th>
+      <th>Tipo de servicio</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each quotes as |quote|}}
+    <tr>
+      <td> {{quote.origin.name}} </td>
+      <td> {{quote.destination.name}} </td>
+      <td> {{moment-format quote.departingDate "llll"}} </td>
+      <td> {{moment-format quote.arrivalDate "llll"}} </td>
+      <td> {{quote.serviceLevel}} </td>
+      <td>A tiempo</td>
+      <td>
+					<a {{action "selectQuote" quote}} class="button btn-small">SELECCIONAR</a>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+    <td colspan="7"> No se encontraron viajes que cumplan su filtro de búsqueda. </td>
+    </tr>
+	{{/each}}
+  </tbody>
+</table>

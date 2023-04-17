@@ -1,0 +1,286 @@
+<div class="white-bg">
+	<div class="row">
+    {{#if showCoupon}}
+      <div class="col-md-12">
+        <div class="form-group">
+          {{input-mask mask="9999999999" class="form-control" unmaskedValue=coupon type="text" placeholder="Número telefónico"}}
+        </div>
+        <div class="form-group">
+          <a class="btn btn-info" {{action "lookupCoupon" coupon}} >Buscar monedero</a>
+          <a class="btn btn-danger" {{action "cancelCoupon"}}>Cancelar</a>
+        </div>
+        {{#if couponData}}
+        <p>El monedero tiene disponible {{format-money couponData.amount}}</p>
+				<div class="form-group">
+					<label>Monto a pagar del monedero</label>
+					{{input class="form-control" value=couponAmount type="number" placeholder="Monto a pagar" max=couponData.amount}}
+				</div>
+        <a class="btn btn-success" {{action "couponContinue" coupon couponAmount}} >Continuar con pago</a>
+        {{/if}}
+        {{#if couponError}}
+        <p class="text-danger">{{couponError}}</p>
+        {{/if}}
+      </div>
+    {{else}}
+      {{#unless showPayment}}
+      <div class="col-md-12">
+        <h1><center>Seleccionar método de pago</center></h1>
+        <div class="payments">
+          <a></a>
+          <a href {{action "selectVisa"}}>
+            <img src="images/icon/visa.png">
+          </a>
+          <a href {{action "selectStores"}}>
+            <img src="images/icon/compropago.png">
+          </a>
+          <a href {{action "selectWallet"}}>
+            <img src="images/icon/wallet.jpg">
+          </a>
+        </div>
+        <div class="pull-right">
+          <a {{action "returnToConfirmation"}} class="btn btn-info">Regresar</a>
+        </div>
+      </div>
+      {{/unless}}
+    {{/if}}
+    {{#if showPayment}}
+    {{#if missingPayment}}
+    <br/>
+		<div class="col-md-12">
+      <h3>
+        Falta por cubrir {{format-money missingPayment}}, a continuación puede hacerlo
+      </h3>
+    </div>
+    {{/if}}
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li class="{{if (eq paymentType 'visa') 'active'}}"><a {{action "selectPaymentType" "visa"}} data-toggle="tab"><i class="fa fa-shopping-bag"></i> Tarjeta de credito</a></li>
+				<li class="{{if (eq paymentType 'store') 'active'}}"><a {{action "selectPaymentType" "store"}} data-toggle="tab"><i class="fa fa-shopping-bag"></i> Pago en tiendas y farmacias</a></li>
+			</ul>
+		</div>
+		<div class="col-md-12">
+			{{#if (eq paymentType 'paypal')}}
+				<div class="form-group">
+					<label>Email</label>
+					{{input class="form-control" value=general.email type="text" placeholder="Correo"}}
+				</div>
+				<a href {{action "submitPaypalPayment"}}><img src="https://www.paypalobjects.com/es_XC/MX/i/btn/btn_buynowCC_LG.gif" alt="Botón para pagar con paypal"></a>
+			{{else if (eq paymentType 'visa')}}
+				<div class="form-group">
+					<label>Email</label>
+					{{input class="form-control" value=general.email type="text" placeholder="Correo"}}
+				</div>
+				<a {{action "submitVisaPayment"}} class="btn btn-success">Continuar</a>
+			{{else if (eq paymentType 'creditCard')}}
+				<div class="form-group">
+					<label>Email</label>
+					{{input class="form-control" value=general.email type="text" placeholder="Correo"}}
+				</div>
+				{{#credit-card form="#card-form" formSelectors=formSelectors}}
+				<form id="card-form">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Número</label>
+								{{input name="number" class="form-control" value=creditCard.number type="text" placeholder="Número" maxlength="19" data-minlength="19" required="required"}}
+                <div class="help-block with-errors">Tarjeta (16 dígitos)</div>
+							</div>
+							<div class="form-group">
+								<label>Nombre</label>
+								{{input name="first-name" class="form-control" value=creditCard.name type="text" placeholder="Nombre" required="required"}}
+							</div>
+							<div class="form-group">
+								<label>Apellidos</label>
+								{{input name="last-name" class="form-control" value=creditCard.lastNames type="text" placeholder="Apellidos" required="required"}}
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Fecha de expiración</label>
+								{{input name="expiry" class="form-control" value=creditCard.expiration type="text" placeholder="MM/AA" data-minlength="7" maxlength="7" required="required"}}
+                <div class="help-block with-errors">Expiración MM/AA</div>
+							</div>
+							<div class="form-group">
+								<label>CVC</label>
+								{{input name="cvc" class="form-control" value=creditCard.cvc type="password" placeholder="CVC" required="required"}}
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Teléfono</label>
+								{{input name="phone" class="form-control" value=creditCard.phone type="text" placeholder="Teléfono" data-minlength="7" required="required"}}
+                <div class="help-block with-errors">El teléfono debe de ser de al menos 7 dígitos</div>
+							</div>
+            </div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Teléfono Celular</label>
+								{{input name="mobilePhone" class="form-control" value=creditCard.mobilePhone type="text" placeholder="Teléfono Celular" data-minlength="7" required="required"}}
+                <div class="help-block with-errors">El teléfono debe de ser de al menos 7 dígitos</div>
+							</div>
+            </div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Código Postal</label>
+								{{input class="form-control" value=address.postalCode type="text" placeholder="Código Postal" required="required" data-minlength="5" maxlength="5" key-up="postalCodeEntry"}}
+							</div>
+							<div class="form-group">
+								<label>Calle</label>
+								{{input class="form-control" value=address.address type="text" placeholder="Dirección" required="required"}}
+							</div>
+							<div class="form-group">
+								<label>Referencias</label>
+								{{input class="form-control" value=address.reference type="text" placeholder="Referencias"}}
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Colonia</label>
+                {{view "select" content=settlements
+                  placeholder="Colonia"
+                  required="required"
+                  class="form-control"
+                  value=address.settlement
+                  optionValuePath="content"
+                  optionLabelPath="content"}}
+							</div>
+							<div class="form-group">
+								<label>Municipio</label>
+								{{input class="form-control" value=address.municipality type="text" placeholder="Municipio" required="required"}}
+							</div>
+							<div class="form-group">
+								<label>Estado</label>
+								{{input class="form-control" value=address.state type="text" placeholder="Estado" required="required"}}
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="pull-right">
+							<a {{action "submitCreditCardPayment"}} class="btn btn-success">Continuar</a>
+						</div>
+					</div>
+				</form>
+				{{/credit-card}}
+			{{else if (eq paymentType 'store')}}
+        <form id="store-form">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Lugar</label>
+                {{view "select" content=stores
+                  class="form-control"
+                  value=store.place
+                  required="required"
+                  optionValuePath="content.id"
+                  optionLabelPath="content.name"}}
+              </div>
+              <div class="form-group">
+                <label>Nombre</label>
+                {{input class="form-control" value=store.name type="text" placeholder="Nombre" required="required"}}
+              </div>
+              <div class="form-group">
+                <label>Apellidos</label>
+                {{input class="form-control" value=store.lastNames type="text" placeholder="Apellidos" rquired="required"}}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Email</label>
+                {{input class="form-control" value=store.email type="text" placeholder="Correo" required="required"}}
+              </div>
+              <div class="form-group">
+                <label>Teléfono móvil</label>
+                {{input class="form-control" value=store.mobilePhone type="text" placeholder="Teléfono móvil" required="required"}}
+              </div>
+            </div>
+          </div>
+          {{#unless general.needBill}}
+          <div class="row">
+            <div class="pull-right">
+              <a {{action "submitStorePayment"}} class="btn btn-success">Continuar</a>
+            </div>
+          </div>
+          {{/unless}}
+        </form>
+      {{/if}}
+      <div class="form-group">
+        <label>Requiere factura</label>
+        {{input type="checkbox" checked=general.needBill}}
+      </div>
+      {{#if general.needBill}}
+			  {{#if (eq paymentType 'creditCard')}}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Misma dirección</label>
+                {{input type="checkbox" checked=billingData.sameAddress}}
+              </div>
+            </div>
+          </div>
+        {{/if}}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Nombre</label>
+              {{input class="form-control" value=billingData.name type="text" placeholder="Nombre"}}
+            </div>
+            <div class="form-group">
+              <label>RFC</label>
+              {{input class="form-control" value=billingData.rfc type="text" placeholder="RFC"}}
+            </div>
+          </div>
+        </div>
+			  {{#unless billingData.sameAddress}}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Código Postal</label>
+                {{input class="form-control" value=billingAddress.postalCode type="text" placeholder="Código Postal" key-up="billingPostalCodeEntry" data-minlength="5" maxlength="5"}}
+              </div>
+              <div class="form-group">
+                <label>Calle</label>
+                {{input class="form-control" value=billingAddress.address type="text" placeholder="Calle"}}
+              </div>
+              <div class="form-group">
+                <label>Referencias</label>
+                {{input class="form-control" value=billingAddress.reference type="text" placeholder="Referencias"}}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Colonia</label>
+                {{view "select" content=billingSettlements
+                  placeholder="Colonia"
+                  class="form-control"
+                  value=billingAddress.settlement
+                  optionValuePath="content"
+                  optionLabelPath="content"}}
+              </div>
+              <div class="form-group">
+                <label>Municipio</label>
+                {{input class="form-control" value=billingAddress.municipality type="text" placeholder="Municipio"}}
+              </div>
+              <div class="form-group">
+                <label>Estado</label>
+                {{input class="form-control" value=billingAddress.state type="text" placeholder="Estado"}}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="pull-left">
+              <a {{action "submitStorePayment"}} class="btn btn-success">Continuar</a>
+            </div>
+          </div>
+        {{/unless}}
+      {{/if}}
+    </div>
+    <div class="pull-right">
+      <a {{action "returnPayment"}} class="btn btn-info">Regresar</a>
+    </div>
+  {{/if}}
+	</div>
+</div>

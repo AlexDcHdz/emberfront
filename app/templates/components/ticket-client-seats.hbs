@@ -1,0 +1,44 @@
+<h2>Selección de asientos</h2>
+{{#each passengers as |passenger|}}
+  {{#if passenger.selected}}
+    <div class="text-center">
+      <h2>Elegir el asiento disponible <img style="height: 30px; width: 30px;" src="/images/bus/a_ver.png" /> para <strong>{{passenger.name}}</strong></h2>
+    </div>
+  {{/if}}
+{{/each}}
+<div class="col-md-12">
+  <ul class="nav nav-tabs">
+  {{#each trip.positions as |position idx|}}
+    <li role="presentation" class={{if (eq idx currentFloor) 'active'}}><a href {{action 'changeFloor' idx}}>Piso {{plus-one idx}}</a></li>
+  {{/each}}
+  </ul>
+  {{#each trip.positions as |position idx|}}
+    {{#if (eq idx currentFloor)}}
+    <table class="bus-table">
+      {{#each position as |row rowIdx|}}
+        <tr>
+          {{#each row as |position columnIdx|}}
+            <td>
+              <a {{action "positionClicked" position}} class="bus-position {{position.icon}} {{position.showData}} {{position.widthClass}} {{position.heightClass}}" id="position-data-{{position.name}}" >
+                {{#if position.showNumber}}
+                  <div class="seatNumber">
+                    {{position.name}}
+                  </div>
+                {{/if}}
+              </a>
+              <div id="position-data-{{position.name}}" style="display: none">
+              </div>
+            </td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+  {{/each}}
+</div>
+<div class="pull-right">
+  <a {{action "returnClicked"}} class="btn btn-info">Regresar</a>
+  {{#if showNext}}
+    <a {{action "continueClicked"}} class="btn btn-success">Continuar</a>
+  {{/if}}
+</div>

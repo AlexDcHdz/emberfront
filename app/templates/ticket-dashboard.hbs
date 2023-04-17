@@ -1,0 +1,271 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+        Tickets Medrano
+        /
+        {{model.terminal.officeName}}
+        /
+        {{model.terminal.terminalName}}
+        </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Venta</h1>
+        {{#if model.boothStatus}}
+          {{#if (eq currentStep 'departure')}}
+            <div class="row">
+              <ul class="nav nav-tabs">
+                <li role="presentation" class="{{if (eq saleType 'search') 'active'}}"><a href {{action 'selectSearch'}}>Búsqueda</a></li>
+                <!--
+                <li role="presentation" class="{{if (eq saleType 'local') 'active'}}"><a href {{action 'selectLocal'}}>Venta local</a></li>
+                -->
+              </ul>
+            </div>
+            <div class="row">
+              {{#if (eq saleType 'local')}}
+                <div class="col-md-12">
+                  {{ticket-booth-quotes quotes=model.quotes.departureQuotes selectQuoteAction="selectQuote"}}
+                </div>
+              {{else}}
+                <div class="col-md-12">
+                  {{ticket-search showPeople=false searchAction="searchTrip" defaultOrigin=model.terminal.stopOffName register-as=ticketSearch}}
+                  {{ticket-booth-quotes quotes=searchDepartures selectQuoteAction="selectQuote"}}
+                </div>
+              {{/if}}
+            </div>
+            <a href {{action "recordSnapshot"}} class="btn btn-info">Precorte</a>
+            <a href {{action "endShift"}} class="btn btn-info">Cierre de caja</a>
+            {{#if startSnapshot}}
+              {{input class="form-control" value=booth.amount type="text" placeholder="Monto a sacar"}}
+              <button {{action 'saveRecordSnapshot' booth}} href class="btn btn-info full-width">Registrar precorte</button>
+            {{/if}}
+          {{/if}}
+          {{#if (eq currentStep 'confirm')}}
+            <h2>Pasajeros</h2>
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Vendidos</th>
+                  <th>Máximo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Adultos mayores</td>
+                  <td>{{sale.departureTrip.olderAdultCount}}</td>
+                  <td>{{sale.departureTrip.maxOlderAdults}}</td>
+                </tr>
+                <tr>
+                  <td>Estudiantes</td>
+                  <td>{{sale.departureTrip.studentCount}}</td>
+                  <td>{{sale.departureTrip.maxStudents}}</td>
+                </tr>
+                <tr>
+                  <td>Reservados</td>
+                  <td>{{sale.departureTrip.reservedCount}}</td>
+                  <td>{{sale.departureTrip.maxReserved}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo de pasajero</th>
+                  <th>Observaciones</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each passengers as |passenger|}}
+                  <tr>
+                    <td>
+                      {{input class="form-control" value=passenger.name type="text" placeholder="Nombre"}}
+                    </td>
+                    <td>
+                      {{view "select" content=passengerTypes
+                        class="form-control"
+                        prompt="Selecciona un tipo de pasajero"
+                        value=passenger.passengerType
+                        optionValuePath="content.id"
+                        optionLabelPath="content.name"}}
+                    </td>
+                    <td>
+                      {{input class="form-control" value=passenger.comments type="text" placeholder="Observaciones"}}
+                    </td>
+                    <td>
+                      {{#if passenger.delete}}
+                        <a {{action 'deletePassenger' passenger}} class="btn btn-danger">Eliminar pasajero</a>
+                      {{/if}}
+                    </td>
+                  </tr>
+                {{/each}}
+                <tr>
+                  <td></td>
+                  <td>
+                    <a class="btn btn-info" {{action 'addPassenger'}}>Agregar pasajero</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h2>Costo</h2>
+            <table class="table table-bordered">
+              <tbody>
+              {{#each quotes as |quote|}}
+                <tr>
+                  <td>{{quote.quote.origin.name}} a {{quote.quote.destination.name}}</td>
+                  <td>{{format-money quote.subtotalPrice}}</td>
+                  <td>{{format-money quote.taxes}}</td>
+                  <td>{{format-money quote.totalPrice}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+            {{#each quotes as |quote|}}
+            <h3>{{quote.quote.origin.name}} a {{quote.quote.destination.name}} <strong>{{quote.quote.serviceLevel}}</strong> {{moment-format quote.quote.departingDate "llll"}}</h3>
+              {{ticket-seats
+                booth=true
+                allSelected="seatsSelected"
+                mode=quote.quote.mode
+                trip=quote.trip
+                quote=quote.quote
+                passengers=passengers}}
+            {{/each}}
+            <div class="pull-right">
+              <a href class="btn btn-danger" {{action 'returnToQuotes'}}>Regresar</a>
+              {{#if sufficientSeats}}
+              <a href class="btn btn-success" {{action 'selectPayment'}}>Continuar</a>
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if (eq currentStep 'payment')}}
+            <p>
+              Total a pagar: {{format-money sale.totalPrice}}
+            </p>
+            {{#each quotes as |quote|}}
+            <h3>{{quote.quote.origin.name}} a {{quote.quote.destination.name}} <strong>{{quote.quote.serviceLevel}}</strong> {{moment-format quote.quote.departingDate "llll"}}</h3>
+              {{ticket-seats
+                booth=true
+                allSelected="seatsSelected"
+                edition=false
+                mode=quote.quote.mode
+                trip=quote.trip
+                quote=quote.quote
+                passengers=passengers}}
+            {{/each}}
+            {{ticket-booth-payment change=true passengers=passengers sale=sale paymentReceived='paymentReceived' register-as=paymentComponent returnReceived='returnToBus'}}
+            {{#if canReserve}}
+            <a class="btn btn-info" {{action 'reserve' sale passengers}}>Reservar</a>
+            {{/if}}
+          {{/if}}
+          {{#if (eq currentStep 'reserved')}}
+            Código de confirmación <strong>{{reservationCode}}</strong>
+            <br />
+            <a class="btn btn-success" href="/ticket-dashboard">Nueva venta</a>
+          {{/if}}
+          {{#if (eq currentStep 'discountPassword')}}
+            <form autocomplete="off">
+              <h1>Se requiere aprobación para password</h1>
+              <input type="password" style="display: none" />
+              {{#if discountError}}
+              <div class="row">
+                <div class="alert alert-danger">
+                  {{discountError}}
+                </div>
+              </div>
+              {{/if}}
+              <dl>
+                  <dt>Usuario</dt>
+                  <dd>
+                    {{input class="form-control" value=discount.username type="text" placeholder="Nombre de usuario" autocomplete="off"}}
+                  </dd>
+                  <dt>Password</dt>
+                  <dd>
+                    {{input class="form-control" value=discount.password type="password" placeholder="Clave" autocomplete="generated-token"}}
+                  </dd>
+              </dl>
+              <div class="pull-right">
+                  <a href class="btn btn-success" {{action 'checkDiscountPassword'}}>Continuar</a>
+              </div>
+            </form>
+          {{/if}}
+          {{#if (eq currentStep 'payed')}}
+            {{#if finishedSale.payed}}
+              <h1>Muchas gracias por tu compra</h1>
+              <dl>
+                <dt>Código de compra</dt>
+                <dd><strong>{{finishedSale.shortId}}</strong></dd>
+                <dt>Pago en</dt>
+                <dd>
+                  {{#if (eq finishedSale.paymentProvider "BOOTH")}}
+                    Caja
+                  {{else}}
+                    Internet
+                  {{/if}}
+                </dd>
+              </dl>
+              <p>
+                Se ha efectuado el pago, puedes descargar tus boletos
+              </p>
+
+              {{#if finishedSale.bill}}
+                <a class="btn btn-info" href="http://api.medrano.just-cloud.com/sale/downloadBill/{{finishedSale.shortId}}?timeZone={{tz}}">Descargar factura</a>
+              {{/if}}
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Asiento</th>
+                    <th>Salida</th>
+                    <th>Destino</th>
+                    <th># de boleto</th>
+                    <th>Descargar boleto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {{#each finishedSale.tickets as |ticket|}}
+                  <tr>
+                    <td> {{ticket.name}} </td>
+                    <td> {{ticket.seat}} </td>
+                    <td> {{ticket.startingStop}} </td>
+                    <td> {{ticket.endingStop}} </td>
+                    <td> {{ticket.ticketId}} </td>
+                    <td> <a href="http://api.medrano.just-cloud.com/sale/downloadTicket/{{ticket.ticketId}}?timeZone={{tz}}">Descargar</a></td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <h1>Favor de revisar el pago</h1>
+              <p>El pago no ha sido procesado, favor de revisar</p>
+            {{/if}}
+          {{/if}}
+        {{else}}
+          <a href {{action "startShift"}} class="btn btn-info">Iniciar turno</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

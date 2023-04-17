@@ -1,0 +1,19 @@
+<div class="map-canvas"></div>
+<table class="table table-striped">
+	<thead>
+		<tr>
+				<th>Parada</th>
+				<th>Tiempo de viaje</th>
+				<th>Tiempo de espera</th>
+		</tr>
+	</thead>
+	<tbody>
+  		{{#each trip.stops as |stop|}}
+			<tr>
+				<td><img src={{stop.icon}}> {{stop.name}}</td>
+				<td>{{moment-duration stop.travelMinutes 'minutes'}}</td>
+				<td>{{moment-duration stop.waitingMinutes 'minutes'}}</td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>

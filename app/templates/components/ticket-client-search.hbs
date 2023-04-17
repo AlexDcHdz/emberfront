@@ -1,0 +1,49 @@
+<form>
+		<div class="row">
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Origen</label>
+                 {{#power-select id="originClientSearch" options=beginningOptions onopen=(action "setInitialBeginningOpts") search=(action "searchBeginningDestinations") noMatchesMessage="No se encontraron resultados" loadingMessage="Cargando resultados" searchMessage="Buscar" selected=search.origin onchange=(action "selectOrigin") as |destination|}}
+                   {{destination.value}}
+                 {{/power-select}}
+						</div>
+				</div>
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Destino</label>
+                 {{#power-select id="destinationClientSearch" options=destinationOptions onopen=(action "setDestinationOpts") search=(action "searchEndingDestinations") noMatchesMessage="No se encontraron resultados" loadingMessage="Cargando resultados" searchMessage="Buscar" selected=search.destination onchange=(action (mut search.destination)) as |destination|}}
+                   {{destination.value}}
+                 {{/power-select}}
+						</div>
+				</div>
+        <div class="{{if showPeople 'col-md-4' 'col-md-2'}}">
+						<div class="form-group">
+								<label>Fecha de salida</label>
+								{{bootstrap-datepicker value=search.departureDate class="form-control" startDate=currentDate language="es"}}
+						</div>
+        </div>
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>Viaje redondo</label>
+								{{input type="checkbox" checked=search.roundTrip}}
+						</div>
+        </div>
+				<div class="col-md-2">
+						{{#if search.roundTrip}}
+						<div class="form-group">
+								<label>Fecha de regreso</label>
+								<div>
+										{{bootstrap-datepicker value=search.returningDate class="form-control" startDate=search.departureDate language="es"}}
+								</div>
+						</div>
+						{{/if}}
+        </div>
+				<div class="col-md-2">
+						<div class="form-group">
+								<label>&nbsp;</label>
+								<button {{action 'searchTrip'}} href class="full-width ladda-button" data-style="zoom-out">BUSCAR</button>
+						</div>
+				</div>
+		</div>
+</form>
+

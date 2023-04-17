@@ -1,0 +1,62 @@
+<div class="flight-list listing-style3 flight">
+  {{#each quotes as |quote|}}
+		<article class="box">
+			<figure class="col-xs-3 col-sm-2">
+				<span><img alt="" src="http://placehold.it/270x160"></span>
+			</figure>
+			<div class="details col-xs-9 col-sm-10">
+				<div class="details-wrapper">
+          <div class="first-row">
+						<div>
+							<h4 class="box-title">{{quote.origin.name}} a {{quote.destination.name}}<small>Ruta {{quote.route.name}} {{quote.serviceLevel}}</small></h4>
+							<div class="amenities">
+                {{#if quote.bus.wifi}}
+                  <i class="soap-icon-wifi circle"></i>
+                {{/if}}
+                {{#if quote.bus.headphones}}
+                  <i class="soap-icon-entertainment circle"></i>
+                {{/if}}
+                {{#if quote.bus.cafeteria}}
+                  <i class="soap-icon-fork circle"></i>
+                {{/if}}
+                {{#if quote.bus.bathroom}}
+                  <i class="soap-icon-family circle"></i>
+                {{/if}}
+							</div>
+						</div>
+						<div>
+							<span class="price"><small>PRECIO POR PERSONA</small>{{format-money quote.totalPrice}}</span>
+						</div>
+					</div>
+					<div class="second-row">
+						<div class="time">
+							<div class="take-off col-sm-4">
+								<div class="icon"><i class="soap-icon-departure yellow-color"></i></div>
+								<div>
+									<span class="skin-color">Salida</span><br />{{moment-format quote.departingDate}}
+								</div>
+							</div>
+							<div class="landing col-sm-4">
+								<div class="icon"><i class="soap-icon-departure yellow-color"></i></div>
+								<div>
+									<span class="skin-color">Llegada</span><br />{{moment-format quote.arrivalDate}}
+								</div>
+							</div>
+							<div class="total-time col-sm-4">
+								<div class="icon"><i class="soap-icon-clock yellow-color"></i></div>
+								<div>
+                  <span class="skin-color">Duración del Viaje</span><br />{{moment-duration quote.extra.shownTime 'minutes'}}
+								</div>
+							</div>
+						</div>
+						<div class="action">
+							<a {{action "selectQuote" quote}} class="button btn-small">SELECCIONAR</a>
+						</div>
+					</div>
+				</div>
+			</div>
+    </article>
+  {{else}}
+    No se encontraron viajes que cumplan su filtro de búsqueda.
+	{{/each}}
+</div>

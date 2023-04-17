@@ -1,0 +1,58 @@
+<ul class="nav nav-sidebar">
+  {{#if enableBoothConfig}}
+    <li class="{{if selectedAdminConfig 'active'}}"><a href="/admin-dashboard">Taquilla</a></li>
+  {{/if}}
+  {{#if enableReports}}
+    <li class="{{if selectedReports 'active'}}"><a href="/admin-dashboard-reports">Reportes</a></li>
+  {{/if}}
+  {{#if enablePayments}}
+    <li class="{{if selectedJoinedPayments 'active'}}"><a href="/joined-payments">Unir Liquidaciones</a></li>
+    <li class="{{if selectedPayments 'active'}}"><a href="/admin-payments">Liquidaciones</a></li>
+    <li class="{{if selectedPaymentSearch 'active'}}"><a href="/payment-search">Búsqueda de liquidaciones</a></li>
+  {{/if}}
+  {{#if enableLoans}}
+    <li class="{{if selectedLoans 'active'}}"><a href="/admin-loans">Deudas</a></li>
+  {{/if}}
+  {{#if enableWeeklyPayments}}
+    <li class="{{if selectedWeeklyPayments 'active'}}"><a href="/admin-weekly-payments">Pagos semanales</a></li>
+  {{/if}}
+  {{#if enableTripSearch}}
+    <li class="{{if selectedTripSearch 'active'}}"><a href="/admin-trip-search">Búsqueda de viajes</a></li>
+  {{/if}}
+  {{#if enableRecordStop}}
+    <li class="{{if selectedRecordStop 'active'}}"><a href="/stop-checker">Registrar parada</a></li>
+  {{/if}}
+  {{#if enableBoothAdmin}}
+    <li class="{{if selectedBoothAdmin 'active'}}"><a href="/booth-list">Cortes y precortes de taquilla</a></li>
+    <li class="{{if selectedBoothDetail 'active'}}"><a href="/boothDetail">Detalle de taquilla</a></li>
+  {{/if}}
+  {{#if enablePaymentAdmin}}
+    <li class="{{if selectedPaymentAdmin 'active'}}"><a href="/payments-list">Cortes y precortes de liquidación</a></li>
+    <li class="{{if selectedPaymentDetail 'active'}}"><a href="/paymentDetail">Detalle de liquidación</a></li>
+  {{/if}}
+  {{#if enableTicketSales}}
+    <li class="{{if selectedTicketSales 'active'}}"><a href="/ticket-dashboard">Venta de tickets</a></li>
+    <li class="{{if selectedPayReserved 'active'}}"><a href="/pay-reserved">Recoger reservados</a></li>
+    <li class="{{if selectedTicketCheck 'active'}}"><a href="/scan-ticket">Escanear ticket</a></li>
+  {{/if}}
+  {{#if enableBaggageSend}}
+    <li class="{{if selectedBaggageSend 'active'}}"><a href="/ticket-baggage">Envío de equipaje</a></li>
+  {{/if}}
+  {{#if enableTicketSearch}}
+    <li class="{{if selectedTicketSearch 'active'}}"><a href="/ticket-dashboard-search">Buscar tickets</a></li>
+    <li class="{{if selectedPackageSearch 'active'}}"><a href="/package-dashboard-search">Buscar paquetería</a></li>
+  {{/if}}
+  {{#if enableTripGuide}}
+    <li class="{{if selectedTripGuide 'active'}}"><a href="/admin-trip-guide">Guías de viaje</a></li>
+  {{/if}}
+  {{#if enableBoardingList}}
+    <li class="{{if selectedBoardingLists 'active'}}"><a href="/tripList">Listas de abordar</a></li>
+  {{/if}}
+  {{#if enableBuyCard}}
+    <li class="{{if selectedBuyCard 'active'}}"><a href="/ticket-dashboard-coupon">Comprar monedero</a></li>
+    <li class="{{if selectedCheckCard 'active'}}"><a href="/ticket-check-coupon">Revisar monedero</a></li>
+  {{/if}}
+  {{#if enableGps}}
+    <li class="{{if selectedGps 'active'}}"><a href="/location-map">Ver GPS</a></li>
+  {{/if}}
+</ul>

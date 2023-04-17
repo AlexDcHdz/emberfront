@@ -1,0 +1,12 @@
+<div class="col-md-3">
+	{{#power-select
+		options=model
+		searchField="name"
+		selected=selectedStop
+		onchange=(action (mut selectedStop))
+		as |stop|
+	}}
+		{{stop.name}}
+	{{/power-select}}
+	<a {{action "goOn" selectedStop}} class="btn btn-success">Continuar</a>
+</div>

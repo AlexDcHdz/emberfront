@@ -1,0 +1,25 @@
+{
+  "name": "ticket-sales-frontend",
+  "dependencies": {
+    "ember": "2.2.0",
+    "ember-cli-shims": "0.1.0",
+    "ember-cli-test-loader": "0.2.2",
+    "ember-load-initializers": "0.1.7",
+    "ember-qunit-notifications": "0.1.0",
+    "jquery": "1.11.3",
+    "loader.js": "^3.5.0",
+    "qunit": "~1.20.0",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0",
+    "typeahead.js": "~0.11.1",
+    "bootstrap-datepicker": "~1.5.0",
+    "moment": ">= 2.8.0",
+    "moment-timezone": "^0.5.4",
+    "card": "~1.2.2",
+    "bootstrap-vertical-tabs": "~1.2.1",
+    "localforage": "^1.4.0",
+    "darktooltip": "0.4.0",
+    "jquery.inputmask": "3.2.7",
+    "bootstrap-validator": "^0.11.9"
+  }
+}

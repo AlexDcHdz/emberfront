@@ -1,0 +1,122 @@
+.bus-table {
+		width: 100%;
+}
+
+.bus-position {
+		float: left;
+		background-size: 30px 30px;
+		background-repeat: no-repeat;
+		background-position: center;
+}
+
+.bus-position {
+    min-height: 30px;
+    margin-bottom: 3px;
+}
+
+.bus-width-1 {
+		width: 30px;
+}
+
+.bus-height-1 {
+		height: 30px;
+}
+
+.bus-width-2 {
+		width: 60px;
+}
+
+.bus-height-2 {
+		height: 60px;
+}
+
+.bus-width-3 {
+		width: 90px;
+}
+
+.bus-height-3 {
+		height: 90px;
+}
+
+.bus-width-4 {
+		width: 120px;
+}
+
+.bus-height-4 {
+		height: 120px;
+}
+
+.a-occupied {
+		background-image: url("/images/bus/a_azb.png");
+}
+
+.atv-occupied {
+		background-image: url("/images/bus/atv_azb.png");
+}
+
+.a-partially-reserved {
+		background-image: url("/images/bus/a_az.png");
+}
+
+.atv-partially-reserved {
+		background-image: url("/images/bus/atv_az.png");
+}
+
+.a-reserved {
+		background-image: url("/images/bus/a_rjb.png");
+}
+
+.atv-reserved {
+		background-image: url("/images/bus/atv_rjb.png");
+}
+
+.a-selected {
+		background-image: url("/images/bus/a_ama.png");
+}
+
+.atv-selected {
+		background-image: url("/images/bus/atv_ama.png");
+}
+
+.a-unselected {
+		background-image: url("/images/bus/a_ver.png");
+}
+
+.atv-unselected {
+		background-image: url("/images/bus/atv_ver.png");
+}
+
+.pue-unselected {
+		background-image: url("/images/bus/pue_azG.png");
+}
+
+.wc-unselected {
+		background-image: url("/images/bus/wc_azbG.png");
+}
+
+.tv-unselected {
+		background-image: url("/images/bus/tv_azbG.png");
+}
+
+.cam-unselected {
+		background-image: url("/images/bus/cam_azbG.png");
+}
+
+.ca-unselected {
+		background-image: url("/images/bus/ca_azbG.png");
+}
+
+.vol-unselected {
+		background-image: url("/images/bus/vol_azbG.png");
+}
+
+.peri-unselected {
+		background-image: url("/images/bus/peri_azbG.png");
+}
+
+.caf-unselected {
+		background-image: url("/images/bus/caf_azG.png");
+}
+.seatNumber {
+  color: black;
+}

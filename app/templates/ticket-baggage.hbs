@@ -1,0 +1,86 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+        Tickets Medrano
+        /
+        {{model.terminal.officeName}}
+        /
+        {{model.terminal.terminalName}}
+        </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Venta de equipaje</h1>
+
+
+        {{#if (eq step "search")}}
+          {{ticket-search showPeople=false searchAction="searchTrip" defaultOrigin=model.terminal.stopOffName}}
+          {{ticket-baggage-booth-quotes quotes=searchDepartures selectQuoteAction="selectQuote"}}
+        {{else if (eq step "sell")}}
+          <h2>Datos del equipaje</h2>
+          <strong style="color: red">Todos los campos son obligatorios</strong>
+          <form>
+            <div class="form-group">
+              <label>Observaciones y comentarios</label>
+              {{textarea value=baggage.concept cols="60" rows="6"}}
+            </div>
+            <div class="form-group">
+              <label>Precio del traslado</label>
+              {{input class="form-control" value=sale.totalPrice type="number" placeholder="Precio de venta"}}
+            </div>
+            <div class="form-group">
+              <label>Nombre de quien deja el paquete</label>
+              {{input class="form-control" value=baggage.senderName type="text" placeholder="Nombre de persona que lo deja"}}
+            </div>
+            <div class="form-group">
+              <label>Nombre de quien recibe el paquete</label>
+              {{input class="form-control" value=baggage.receiverName type="text" placeholder="Nombre de persona que recibe el paquete"}}
+            </div>
+            <div class="form-group">
+              <label>Datos para regresar el paquete (en caso de no poderlo entregar)</label>
+              {{textarea value=baggage.contactData cols="60" rows="6"}}
+            </div>
+            <div>
+              <div class="pull-right">
+                <a class="btn btn-success" {{action "payment"}}>Continuar</a>
+              </div>
+            </div>
+          </form>
+        {{else if (eq step "payment")}}
+          <p>
+            Total a pagar: {{format-money sale.totalPrice}}
+          </p>
+          {{ticket-booth-payment change=true sale=sale paymentReceived='paymentReceived'}}
+        {{else if (eq step "payed")}}
+            <h1>Muchas gracias por tu compra</h1>
+            <dl>
+              <dt>Código de compra</dt>
+              <dd><strong>{{finishedSale.shortId}}</strong></dd>
+            </dl>
+        {{/if}}
+
+      </div>
+    </div>
+  </div>
+</div>

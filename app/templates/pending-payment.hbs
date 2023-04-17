@@ -1,0 +1,183 @@
+<div id="page-wrapper">
+	<header class="navbar-static-top style6" id="header">
+		<div class="container">
+			<h1 class="logo navbar-brand"><a href="/" title=
+																			 "Turismo en Omnibus"><img alt="Turismo en Omnibus" src=
+																																 "images/medher.png"></a></h1>
+			<div class="pull-right hidden-mobile">
+				{{user-login}}
+			</div>
+		</div><a class="mobile-menu-toggle" data-toggle="collapse" href=
+						 "#mobile-menu-01">Mobile Menu Toggle</a>
+		<div class="main-navigation">
+			<div class="container">
+				<nav id="main-menu" role="navigation">
+					<ul class="menu">
+						<li>
+							<a href="/" title="Turismo Omnibus"><img alt=
+																																"Agencia de Viajes Medher" draggable="true" src=
+																																"images/tom_1.png"></a>
+						</li>
+						<li class="menu-item-has-children">
+							<a href="/">Inicio</a>
+						</li>
+            <li class="menu-item-has-children">
+              <a href="/viewTickets">Facturación / Tickets</a>
+            </li>
+            <li class="menu-item-has-children">
+              <a href="/salePoints">Puntos de Venta</a>
+            </li>
+            <li class="menu-item-has-children">
+              <a href="/about">Quienes somos</a>
+            </li>
+					</ul>
+				</nav>
+				<ul class="social-icons clearfix pull-right hidden-mobile">
+          <li class="twitter">
+            <a data-toggle="tooltip" href="http://www.twitter.com/viajes_medher" title="twitter"><i class=
+            "soap-icon-twitter"></i></a>
+          </li>
+          <li class="facebook">
+            <a data-toggle="tooltip" href=
+            "https://www.facebook.com/MedherOficial/" title=
+            "facebook"><i class="soap-icon-facebook"></i></a>
+          </li>
+				</ul>
+			</div>
+		</div>
+		<nav class="mobile-menu collapse" id="mobile-menu-01">
+			<ul class="menu" id="mobile-primary-menu">
+				<li class="main-navigation"><img alt="Agencia de Viajes Medher"
+																				 draggable="true" src="images/tom_1.png"></li>
+				<li class="menu-item-has-children">
+					<a href="/">Inicio</a>
+				</li>
+        <li class="menu-item-has-children">
+          <a href="/viewTickets">Facturación / Tickets</a>
+        </li>
+        <li class="menu-item-has-children">
+          <a href="/salePoints">Puntos de Venta</a>
+        </li>
+        <li class="menu-item-has-children">
+          <a href="/about">Quienes somos</a>
+        </li>
+			</ul>
+			<ul class="mobile-topnav container">
+				<li>
+					<a href="#">MI CUENTA</a>
+				</li>
+				<li>
+					<a class="soap-popupbox" href="#">LOGIN</a>
+				</li>
+				<li>
+					<a href="#%20class=">SIGNUP</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<div class="page-title-container">
+		<div class="container">
+			<div class="page-title pull-left">
+				<h2 class="entry-title">Pago pendiente</h2>
+			</div>
+			<ul class="breadcrumbs pull-right">
+				<li><a href="/">INICIO</a></li>
+				<li class="active">Pago pendiente</li>
+			</ul>
+		</div>
+	</div>
+	<section id="content">
+		<div class="container">
+			<div id="main">
+				<div class="row">
+					<h1>Muchas gracias por tu compra</h1>
+					<p>
+						Ahora debes de efectuar el pago correspondiente, en cuanto se vea reflejado recibirás tus boletos.
+					</p>
+					{{#if model.payed}}
+						UNO
+					{{else}}
+						<p>{{model.payment.paymentInstructions.description}}</p>
+						<ol>
+						  <li>{{model.payment.paymentInstructions.step_1}}</li>
+						  <li>{{model.payment.paymentInstructions.step_2}}</li>
+						  <li>{{model.payment.paymentInstructions.step_3}}</li>
+						</ol>
+						<p>{{model.payment.paymentInstructions.note_extra_comition}}</p>
+						<p>{{model.payment.paymentInstructions.note_expiration_date}}</p>
+						<p>{{model.payment.paymentInstructions.note_confirmation}}</p>
+					{{/if}}
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer id="footer">
+		<div class="footer-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-md-4">
+						<div class="pull-left">
+							<a href="/" title="Turismo Omnibus"><img alt=
+																																"Agencia de Viajes Medher" draggable="true" src=
+																																"images/medher.png"></a>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<h2>Boletín</h2>
+						<p>Suscribase a nuestro boletín para recibir las últimas
+							promociones</p><br>
+						<div class="icon-check">
+							<input class="input-text full-width" placeholder="Su email"
+										 type="text">
+						</div><br>
+						<span><a href="politicas.html">Aviso de Privacidad</a><br>
+							<a href="politicas.html">Términos y Condiciones</a></span>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<br>
+						<address class="contact-details">
+							<span class="contact-phone"><i class="soap-icon-phone"></i>01 800 727 8633</span><br>
+							<span class="contact-phone">WhatsApp: 55 2899 0715</span><br>
+              <a class="contact-email" href="mailto:atencionaclientes@medher.mx"><i class="soap-icon-message"></i> atencionaclientes@medher.mx</a>
+						</address>
+						<ul class="social-icons clearfix">
+              <li class="twitter">
+                <a data-toggle="tooltip" href="http://www.twitter.com/viajes_medher" title="twitter"><i class=
+                "soap-icon-twitter"></i></a>
+              </li>
+              <li class="facebook">
+                <a data-toggle="tooltip" href=
+                "https://www.facebook.com/MedherOficial/" title=
+                "facebook"><i class="soap-icon-facebook"></i></a>
+              </li>
+						</ul>
+                        <address class="contact-details">
+                            <span>Solicita informes y cotización de renta de unidades al siguiente contacto:</span>
+                            <br>
+                            <a class="contact-email" href="mailto:viajesmedher@hotmail.com" style="padding-right: 0px">viajesmedher@hotmail.com</a>
+                        </address>
+												<address class="contact-details">
+                            <span>Solicita información de corridas a los siguientes números:</span>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Sucursal central: (833) 217-2228</a>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Sucursal norte: (833) 139-0149</a>
+                            <br>
+                            <a class="contact-email" style="padding-right: 0px">Horario de 24 hrs. Central: (833) 126-0010</a>
+                        </address>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bottom gray-area">
+			<div class="pull-right">
+				<a class="animated" data-animation-type="bounce" href="#" id=
+					 "back-to-top"><i class="soap-icon-longarrow-up circle"></i></a>
+			</div>
+			<div class="copyright pull-right">
+				<p>© 2017 Turismo en Omnibus</p>
+			</div>
+		</div>
+	</footer>
+</div>

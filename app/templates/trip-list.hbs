@@ -1,0 +1,82 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+        Tickets Medrano
+        /
+        {{model.terminal.officeName}}
+        /
+        {{model.terminal.terminalName}}
+        </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Viajes</h1>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                  <label>Desde</label>
+                  {{bootstrap-datepicker value=search.from class="form-control" language="es"}}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                  <label>Hasta</label>
+                  {{bootstrap-datepicker value=search.to class="form-control" language="es"}}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                  <br />
+                  <button {{action 'searchTrips' search}} href class="full-width ladda-button" data-style="zoom-out">BUSCAR</button>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Ruta</th>
+              <th>Autobus</th>
+              <th>Origen</th>
+              <th>Destino</th>
+              <th>Fecha de salida</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each trips as |trip|}}
+              <tr>
+                <td>{{trip.route.name}}</td>
+                <td>{{trip.busNumber}}</td>
+                <td>{{trip.originName}}</td>
+                <td>{{trip.destinationName}}</td>
+                <td>{{moment-format trip.departureDate}}</td>
+                <td><a {{action 'downloadTripGuide' trip}} class="btn btn-info">Descargar</a></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

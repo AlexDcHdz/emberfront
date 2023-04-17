@@ -1,0 +1,238 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        {{#if (eq section "listing")}}
+        <h1 class="page-header">Generar guías de viaje</h1>
+				<div class="col-md-4">
+						<div class="form-group">
+								<label>Elegir salida</label>
+                {{view "select" content=model
+                  class="form-control"
+                  prompt="Seleccionar salida"
+                  value=selectedBeginning.name
+                  optionValuePath="content.name"
+                  optionLabelPath="content.name"}}
+						</div>
+				</div>
+          {{#if trips}}
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    Salida
+                  </th>
+                  <th>
+                    Llegada
+                  </th>
+                  <th>
+                    Operadores
+                  </th>
+                  <th>
+                    Ruta
+                  </th>
+                  <th>
+                    Autobus
+                  </th>
+                  <th>
+                    Hora de salida
+                  </th>
+                  <th>
+                    Generar gúia
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each trips as |trip|}}
+                <tr>
+                  <td>
+                    {{trip.startingStop.name}}
+                  </td>
+                  <td>
+                    {{trip.endingStop.name}}
+                  </td>
+                  <td>
+                    {{trip.driver1.name}} / {{trip.driver2.name}}
+                  </td>
+                  <td>
+                    {{trip.routeName}}
+                  </td>
+                  <td>
+                    {{trip.busName}}
+                  </td>
+                  <td>
+                    {{moment-format trip.departureDate}}
+                  </td>
+                  <td>
+                    <a class="btn btn-info" {{action 'showTrip' trip}}>Generar guía</a>
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+        {{/if}}
+        {{#if (eq section "detail")}}
+          <h1>{{tripDetail.routeName}}</h1>
+          <h4>{{moment-format tripDetail.departureDate}} - {{moment-format tripDetail.estimatedArrivalDate}}</h4>
+          <ul class="nav nav-tabs">
+            <li role="presentation" class="{{if (eq subsection 'paradas') 'active'}}"><a href {{action 'selectSubsection' 'paradas'}}>Paradas</a></li>
+            <li role="presentation" class="{{if (eq subsection 'pasajeros') 'active'}}"><a href {{action 'selectSubsection' 'pasajeros'}}>Pasajeros</a></li>
+            <li role="presentation" class="{{if (eq subsection 'anticipos') 'active'}}"><a href {{action 'selectSubsection' 'anticipos'}}>Anticipos</a></li>
+          </ul>
+          {{#if (eq subsection 'paradas')}}
+            <h4>Paradas</h4>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Parada</th>
+                  <th>Horario</th>
+                  <th>Tiempo de viaje</th>
+                  <th>Tiempo de espera</th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each tripDetail.tripData.stops as |stop|}}
+                <tr>
+                  <td>{{stop.name}}</td>
+                  <td>{{moment-format stop.departureDate}}</td>
+                  <td>{{stop.travelMinutes}} minutos</td>
+                  <td>{{stop.waitingMinutes}} minutos</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+          {{#if (eq subsection 'pasajeros')}}
+            {{#each tripDetail.tripData.stops as |stop|}}
+              {{#if stop.hasOps}}
+              <div>
+                <h3 class="page-header">{{stop.name}}</h3>
+                {{#if stop.beginnings}}
+                <div>
+                  <h4>Ascensos</h4>
+                  {{#each stop.beginnings as |op|}}
+                  <div class="col-md-3">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr>
+                          <th>Pasajero</th>
+                          <td>{{op.passengerName}}</td>
+                        </tr>
+                        <tr>
+                          <th>Asiento</th>
+                          <td>{{op.seatName}}</td>
+                        </tr>
+                        <tr>
+                          <th># Ticket</th>
+                          <td>{{op.ticketId}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  {{/each}}
+                </div>
+                {{/if}}
+                {{#if stop.endings}}
+                <div>
+                  <h4>Descensos</h4>
+                  {{#each stop.endings as |op|}}
+                  <div class="col-md-3">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr>
+                          <th>Pasajero</th>
+                          <td>{{op.passengerName}}</td>
+                        </tr>
+                        <tr>
+                          <th>Asiento</th>
+                          <td>{{op.seatName}}</td>
+                        </tr>
+                        <tr>
+                          <th># Ticket</th>
+                          <td>{{op.ticketId}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  {{/each}}
+                </div>
+                {{/if}}
+              </div>
+              {{/if}}
+            {{/each}}
+          {{/if}}
+          {{#if (eq subsection 'anticipos')}}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Descripción</th>
+                  <th>Monto</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each advances as |advance|}}
+                <tr>
+                  <td>
+                    <div class="form-group">
+                      {{#if advance.fixed}}
+                        {{advance.description}}
+                      {{else}}
+                        {{input class="form-control" value=advance.description type="text" placeholder="Descripción"}}
+                      {{/if}}
+                    </div>
+                  </td>
+                  <td>
+                      {{#if advance.fixed}}
+                        {{format-money advance.amount}}
+                      {{else}}
+                        {{input class="form-control" value=advance.amount type="number" placeholder="Monto"}}
+                      {{/if}}
+                  </td>
+                  <td>
+                    {{#if advance.fixed}}
+                    {{else}}
+                    <a class="btn btn-danger" {{action 'removeAdvance' advance}}>Eliminar anticipo</a>
+                    {{/if}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            <a class="btn btn-info" {{action 'addAdvance'}}>Agregar anticipo</a>
+            <br />
+            <div class="form-group">
+              {{textarea class="form-control" value=description type="text" placeholder="Observaciones" cols="80" rows="10"}}
+            </div>
+            <a class="btn btn-success" {{action 'save' tripDetail advances description}}>Guardar</a>
+            <a class="btn btn-info" {{action 'print' tripDetail advances}}>Imprimir</a>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

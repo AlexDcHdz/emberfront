@@ -1,0 +1,85 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+
+        <div class="map-canvas"></div>
+
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Ruta</th>
+              <th>Hora de salida</th>
+              <th>Autobús</th>
+              <th>Nivel de servicio</th>
+              <th>Ubicación actual</th>
+              <th>Retrasado</th>
+              <th>Minutos de retraso</th>
+              <th>Fuera de ruta</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each model as |location|}}
+              <tr>
+                <td>
+                  {{location.routeName}}
+                </td>
+                <td>
+                  {{moment-format location.trip.departureDate}}
+                </td>
+                <td>
+                  {{location.bus.busNumber}}
+                </td>
+                <td>
+                  {{location.serviceLevelTypeName}}
+                </td>
+                <td>
+                  {{location.location}}
+                </td>
+                <td>
+                  {{location.currentlyDelayed}}
+                </td>
+                <td>
+                  {{location.delayedTime}}
+                </td>
+                <td>
+                  {{location.offRoute}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+

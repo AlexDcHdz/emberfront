@@ -1,0 +1,72 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+h
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1>Paradas pendientes</h1>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Elegir parada</label>
+            {{view "select" content=model
+              class="form-control"
+              prompt="Seleccionar parada"
+              value=selectedStop.name
+              optionValuePath="content.name"
+              optionLabelPath="content.name"}}
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Fecha de salida</th>
+                <th>Operador</th>
+                <th>Autobus</th>
+                <th>Ruta</th>
+                <th>Hora estimada</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each missingStops as |stop|}}
+              <tr>
+                <td>{{stop.beginning.name}}</td>
+                <td>{{stop.ending.name}}</td>
+                <td>{{moment-format stop.departureDate}}</td>
+                <td>{{stop.driver1}}</td>
+                <td>{{stop.bus}}</td>
+                <td>{{stop.runName}}</td>
+                <td>{{moment-format stop.expectedStop}}</td>
+                <td><a class="btn btn-success" {{action "visited" stop.id}}>Pasó</a></td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

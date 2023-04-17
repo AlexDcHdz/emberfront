@@ -1,0 +1,78 @@
+<div id="dashboard-body">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Tickets Medrano</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a {{action "dashboard"}}>Dashboard</a></li>
+          <li><a href {{action "logout"}}>Salida</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        {{admin-menu}}
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">Detalle de pagos</h1>
+        <form>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Desde</label>
+                      {{bs-datetimepicker class="form-control" updateDate=(action (mut report.from))}}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Hasta</label>
+                      {{bs-datetimepicker class="form-control" updateDate=(action (mut report.to))}}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                      <br />
+                      <button {{action 'searchSalesPeople' report}} href class="full-width ladda-button" data-style="zoom-out">BUSCAR</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido paterno</th>
+              <th>Apellido materno</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each salesmen as |person|}}
+            <tr>
+              <td>{{person.name}}</td>
+              <td>{{person.lastName}}</td>
+              <td>{{person.secondLastName}}</td>
+              <td>
+                <a class="btn btn-info" {{action "download" person}}>Descargar</a>
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
